@@ -2,47 +2,44 @@ import { Icons } from "@/components/icons";
 import { HomeIcon, NotebookIcon } from "lucide-react";
 
 export const DATA = {
-  name: "Dillion Verma",
-  initials: "DV",
+  name: "Ethan Lambeth",
+  initials: "EL",
   url: "https://dillion.io",
-  location: "San Francisco, CA",
-  locationLink: "https://www.google.com/maps/place/sanfrancisco",
+  location: "Dunedin, NZ",
+  locationLink: "https://www.google.com/maps/place/dunedin",
   description:
-    "Software Engineer turned Entrepreneur. I love building things and helping people. Very active on Twitter.",
+    "Studying BComm in Economics, minoring in Philosophy. I love building things and helping people. I am trying to blog more.",
   summary:
-    "At the end of 2022, I quit my job as a software engineer to go fulltime into building and scaling my own SaaS businesses. In the past, [I pursued a double degree in computer science and business](/#education), [interned at big tech companies in Silicon Valley](https://www.youtube.com/watch?v=d-LJ2e5qKdE), and [competed in over 21 hackathons for fun](/#hackathons). I also had the pleasure of being a part of the first ever in-person cohort of buildspace called [buildspace sf1](https://buildspace.so/sf1).",
-  avatarUrl: "/me.png",
+    "I am passionate about problem-solving, leadership, and creating positive change. I have a keen interest in governance structures and their impact on organizations and communities. I am currently pursuing a [Bachelor of Commerce in Economics, with a minor in Philosophy.](#education) I am committed to applying knowledge to solving real-world problems - [take a look at my side projects :-).](#projects) I'm now seeking further opportunities to leverage my experience and drive meaningful change.",
+  avatarUrl: "/mecube.jpg",
   skills: [
+    "Governance",
+    "Financial Acumen",
     "React",
     "Next.js",
-    "Typescript",
-    "Node.js",
     "Python",
-    "Go",
-    "Postgres",
-    "Docker",
-    "Kubernetes",
-    "Java",
-    "C++",
+    "SQL",
+
+
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
     { href: "/blog", icon: NotebookIcon, label: "Blog" },
   ],
   contact: {
-    email: "hello@example.com",
+    email: "elambethnz@gmail.com",
     tel: "+123456789",
     social: {
       GitHub: {
         name: "GitHub",
-        url: "https://dub.sh/dillion-github",
+        url: "https://github.com/Elambeth/",
         icon: Icons.github,
 
         navbar: true,
       },
       LinkedIn: {
         name: "LinkedIn",
-        url: "https://dub.sh/dillion-linkedin",
+        url: "https://www.linkedin.com/in/ethan-lambeth/",
         icon: Icons.linkedin,
 
         navbar: true,
@@ -52,160 +49,91 @@ export const DATA = {
         url: "https://dub.sh/dillion-twitter",
         icon: Icons.x,
 
-        navbar: true,
+        navbar: false,
       },
       Youtube: {
         name: "Youtube",
         url: "https://dub.sh/dillion-youtube",
         icon: Icons.youtube,
-        navbar: true,
+        navbar: false,
       },
       email: {
         name: "Send Email",
-        url: "#",
+        url: "elambethnz@gmail.com",
         icon: Icons.email,
 
-        navbar: false,
+        navbar: true,
       },
     },
   },
 
   work: [
+
     {
-      company: "Atomic Finance",
-      href: "https://atomic.finance",
+      company: "Age Concern Otago",
+      href: "https://ageconcernotago.com/",
       badges: [],
-      location: "Remote",
-      title: "Bitcoin Protocol Engineer",
-      logoUrl: "/atomic.png",
-      start: "May 2021",
-      end: "Oct 2022",
+      location: "Dunedin, NZ",
+      title: "Executive Board Intern",
+      logoUrl: "/ACO.png",
+      start: "June 2024",
+      end: "Present",
       description:
-        "Implemented the Bitcoin discreet log contract (DLC) protocol specifications as an open source Typescript SDK. Dockerized all microservices and setup production kubernetes cluster. Architected a data lake using AWS S3 and Athena for historical backtesting of bitcoin trading strategies. Built a mobile app using react native and typescript.",
+        "I support the organization's mission to enhance older people's wellbeing in the Otago region. This role provides me with valuable experience in non-profit governance and elder care advocacy while developing skills in strategic planning and community engagement.",
     },
     {
-      company: "Shopify",
+      company: "Ignite Consultants",
+      href: "https://www.igniteconsultants.co.nz/",
       badges: [],
-      href: "https://shopify.com",
-      location: "Remote",
-      title: "Software Engineer",
-      logoUrl: "/shopify.svg",
-      start: "January 2021",
-      end: "April 2021",
+      location: "Dunedin, NZ",
+      title: "Volunteer Consultant",
+      logoUrl: "/ignite.png",
+      start: "March 2023",
+      end: "June 2023",
       description:
-        "Implemented a custom Kubernetes controller in Go to automate the deployment of MySQL and ProxySQL custom resources in order to enable 2,000+ internal developers to instantly deploy their app databases to production. Wrote several scripts in Go to automate MySQL database failovers while maintaining master-slave replication topologies and keeping Zookeeper nodes consistent with changes.",
-    },
-    {
-      company: "Nvidia",
-      href: "https://nvidia.com/",
-      badges: [],
-      location: "Santa Clara, CA",
-      title: "Software Engineer",
-      logoUrl: "/nvidia.png",
-      start: "January 2020",
-      end: "April 2020",
-      description:
-        "Architected and wrote the entire MVP of the GeForce Now Cloud Gaming internal admin and A/B testing dashboard using React, Redux, TypeScript, and Python.",
-    },
-    {
-      company: "Splunk",
-      href: "https://splunk.com",
-      badges: [],
-      location: "San Jose, CA",
-      title: "Software Engineer",
-      logoUrl: "/splunk.svg",
-      start: "January 2019",
-      end: "April 2019",
-      description:
-        "Co-developed a prototype iOS app with another intern in Swift for the new Splunk Phantom security orchestration product (later publicly demoed and launched at .conf annual conference in Las Vegas). Implemented a realtime service for the iOS app in Django (Python) and C++; serialized data using protobufs transmitted over gRPC resulting in an approximate 500% increase in data throughput.",
-    },
-    {
-      company: "Lime",
-      href: "https://li.me/",
-      badges: [],
-      location: "San Francisco, CA",
-      title: "Software Engineer",
-      logoUrl: "/lime.svg",
-      start: "January 2018",
-      end: "April 2018",
-      description:
-        "Proposed and implemented an internal ruby API for sending/receiving commands to scooters over LTE networks. Developed a fully automated bike firmware update system to handle asynchronous firmware updates of over 100,000+ scooters worldwide, and provide progress reports in real-time using React, Ruby on Rails, PostgreSQL and AWS EC2 saving hundreds of developer hours.",
-    },
-    {
-      company: "Mitre Media",
-      href: "https://mitremedia.com/",
-      badges: [],
-      location: "Toronto, ON",
-      title: "Software Engineer",
-      logoUrl: "/mitremedia.png",
-      start: "May 2017",
-      end: "August 2017",
-      description:
-        "Designed and implemented a robust password encryption and browser cookie storage system in Ruby on Rails. Leveraged the Yahoo finance API to develop the dividend.com equity screener",
+        "Worked in a team of six students to provide recommendations to Age Concern Otago a not-for-profit community organization that celebrates and advances the dignity, respect, and wellbeing of Otago’s older people.",
     },
   ],
   education: [
     {
-      school: "Buildspace",
-      href: "https://buildspace.so",
-      degree: "s3, s4, sf1, s5",
-      logoUrl: "/buildspace.jpg",
-      start: "2023",
-      end: "2024",
+      school: "Otago University",
+      href: "https://www.otago.ac.nz/",
+      degree: "Bachelor of Commerce in Economics with a Minor in Philosophy",
+      logoUrl: "/university-of-otago-logo-profile.jpg",
+      start: "2024",
+      end: "Present",
     },
     {
-      school: "University of Waterloo",
-      href: "https://uwaterloo.ca",
-      degree: "Bachelor's Degree of Computer Science (BCS)",
-      logoUrl: "/waterloo.png",
-      start: "2016",
-      end: "2021",
-    },
-    {
-      school: "Wilfrid Laurier University",
-      href: "https://wlu.ca",
-      degree: "Bachelor's Degree of Business Administration (BBA)",
-      logoUrl: "/laurier.png",
-      start: "2016",
-      end: "2021",
-    },
-    {
-      school: "International Baccalaureate",
-      href: "https://ibo.org",
-      degree: "IB Diploma",
-      logoUrl: "/ib.png",
-      start: "2012",
-      end: "2016",
+      school: "Logan Park High School",
+      href: "https://www.lphs.school.nz/",
+      degree: "Head Boy + Board of Trustees representative",
+      logoUrl: "/lphs.png",
+      start: "2019",
+      end: "2023",
     },
   ],
   projects: [
     {
-      title: "Chat Collect",
-      href: "https://chatcollect.com",
-      dates: "Jan 2024 - Feb 2024",
+      title: "NFP Toolkit",
+      href: "https://nfptoolkit.org",
+      dates: "July 2024 - Present",
       active: true,
       description:
-        "With the release of the [OpenAI GPT Store](https://openai.com/blog/introducing-the-gpt-store), I decided to build a SaaS which allows users to collect email addresses from their GPT users. This is a great way to build an audience and monetize your GPT API usage.",
+        "NFP Toolkit empowers New Zealand's not-for-profits with user-friendly digital tools. Our solutions help Kiwi charities streamline operations, quantify their impact, and amplify their mission—all tailored to the unique needs of Aotearoa's charitable sector.",
       technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
+        "React",
         "TailwindCSS",
-        "Stripe",
-        "Shadcn UI",
-        "Magic UI",
       ],
       links: [
         {
           type: "Website",
-          href: "https://chatcollect.com",
+          href: "https://nfptoolkit.org",
           icon: <Icons.globe className="size-3" />,
         },
       ],
-      image: "",
+      image: "/nfptoolkit_homepage.png",
       video:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4",
+        "",
     },
     {
       title: "Magic UI",
@@ -239,68 +167,7 @@ export const DATA = {
       image: "",
       video: "https://cdn.magicui.design/bento-grid.mp4",
     },
-    {
-      title: "llm.report",
-      href: "https://llm.report",
-      dates: "April 2023 - September 2023",
-      active: true,
-      description:
-        "Developed an open-source logging and analytics platform for OpenAI: Log your ChatGPT API requests, analyze costs, and improve your prompts.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Shadcn UI",
-        "Magic UI",
-        "Stripe",
-        "Cloudflare Workers",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://llm.report",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/dillionverma/llm.report",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://cdn.llm.report/openai-demo.mp4",
-    },
-    {
-      title: "Automatic Chat",
-      href: "https://automatic.chat",
-      dates: "April 2023 - March 2024",
-      active: true,
-      description:
-        "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Shadcn UI",
-        "Magic UI",
-        "Stripe",
-        "Cloudflare Workers",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://automatic.chat",
-          icon: <Icons.globe className="size-3" />,
-        },
-      ],
-      image: "",
-      video:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/automatic-chat.mp4",
-    },
+
   ],
   hackathons: [
     {
@@ -610,13 +477,13 @@ export const DATA = {
       ],
     },
     {
-      title: "StartHacks I",
-      dates: "March 4th - 5th, 2017",
-      location: "Waterloo, Ontario",
+      title: "PWC & COMSA Case Competiton",
+      dates: "July 15 - 19th, 2024",
+      location: "Dunedin, NZ",
       description:
         "Developed at StartHacks 2017, Recipic is a mobile app which allows you to take pictures of ingredients around your house, and it will recognize those ingredients using ClarifAI image recognition API and return possible recipes to make. Recipic recieved 1st place at the hackathon for best pitch and hack.",
       image:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/hackline/starthacks.png",
+        "ecofuel.png",
       win: "1st Place Winner",
       mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2017/white.svg",
       links: [
@@ -633,56 +500,50 @@ export const DATA = {
       ],
     },
     {
-      title: "QHacks II",
-      dates: "February 3rd - 5th, 2017",
-      location: "Kingston, Ontario",
+      title: "Victoria Business school Nationals",
+      dates: "May 11, 2024",
+      location: "Wellington, NZ",
       description:
-        "Developed a mobile game which enables city-wide manhunt with random lobbies",
+        "Pitched a collaborative energy strategy for NZ Windfarms, partnering with local iwi to implement hydroelectric storage solutions, ensuring sustainable growth and long-term community benefits in the New Zealand energy market.",
       image:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/hackline/qhacks.png",
-      mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2017/white.svg",
+        "NZ Windfarms.jpg",
       links: [
         {
-          title: "Source (Mobile)",
-          icon: <Icons.github className="h-4 w-4" />,
-          href: "https://github.com/dillionverma/human-huntr-react-native",
-        },
-        {
-          title: "Source (API)",
-          icon: <Icons.github className="h-4 w-4" />,
-          href: "https://github.com/mattBlackDesign/human-huntr-rails",
+          title: "Slide Deck",
+          icon: <Icons.powerpoint className="h-4 w-4" />,
+          href: "https://1drv.ms/p/c/c950e0d1c926d918/EfBs7iQTAxpPu6q1kjy05gAB3XGbJTHDlluzlhOn3-7FjQ?e=1vPKv5",
         },
       ],
     },
     {
-      title: "Terrible Hacks V",
-      dates: "November 26th, 2016",
-      location: "Waterloo, Ontario",
+      title: "Otago Internal competition Final",
+      dates: "May 8, 2024",
+      location: "Dunedin, NZ",
       description:
-        "Developed a mock of Windows 11 with interesting notifications and functionality",
+        "Pitched a partnership network for JPMC in the U.S. to leverage its extensive data infrastructure, enabling fintech companies to access JPMC’s resources while driving innovation and securing future market leadership.",
       image:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/hackline/terrible-hacks-v.png",
+        "JPMC.png",
       links: [
         {
-          title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
-          href: "https://github.com/justinmichaud/TerribleHacks2016-Windows11",
+          title: "Slide Deck",
+          icon: <Icons.powerpoint className="h-4 w-4" />,
+          href: "https://1drv.ms/p/c/c950e0d1c926d918/EYwECY4SAjNLlz5Y3u_8cvIBbLrbzAL3t4IYSydN5ltxCg?e=cphDfm",
         },
       ],
     },
     {
-      title: "Portal Hackathon",
-      dates: "October 29, 2016",
-      location: "Kingston, Ontario",
+      title: "Otago University Internal Competition",
+      dates: "March 23, 2024",
+      location: "Dunedin, Otago",
       description:
-        "Developed an internal widget for uploading assignments using Waterloo's portal app",
+        "Pitched a rewards-based EcoCard system for P&G in the Philippines to incentivize sachet recycling, promote bulk buying, and enhance the brand’s sustainability efforts in the region.",
       image:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/hackline/portal-hackathon.png",
+        "P&G.jpg",
       links: [
         {
-          title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
-          href: "https://github.com/UWPortalSDK/crowmark",
+          title: "Slide Deck",
+          icon: <Icons.powerpoint className="h-4 w-4" />,
+          href: "https://1drv.ms/p/c/c950e0d1c926d918/EaJCrnfvBI5ImX5A2lOBTTcBi_YqQxgpLM89SjdORCzD7g?e=1EodQY",
         },
       ],
     },

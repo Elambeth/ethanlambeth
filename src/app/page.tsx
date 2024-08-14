@@ -124,7 +124,7 @@ export default function Page() {
                 </h2>
                 <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   I&apos;ve worked on a variety of projects, from simple
-                  websites to complex web applications. Here are a few of my
+                  websites to complex web applications. Here are a couple of my
                   favorites.
                 </p>
               </div>
@@ -158,18 +158,16 @@ export default function Page() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
-                  Hackathons
+                  Case Competitions
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  I like building things
+                  I like problem solving
                 </h2>
                 <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  During my time in university, I attended{" "}
-                  {DATA.hackathons.length}+ hackathons. People from around the
-                  country would come together and build incredible things in 2-3
-                  days. It was eye-opening to see the endless possibilities
-                  brought to life by a group of motivated and passionate
-                  individuals.
+                  During my time in university, I have competed in {" "}
+                  {DATA.hackathons.length}+ case competitions. Students from various institutions from across the world would compete trying to solve different business challenges. 
+                  It was interesting to see the variety of solutions teams came up with when faced with real-world business problems. These competitions showed me how many different ways there are to approach complex issues in business.
+
                 </p>
               </div>
             </div>
