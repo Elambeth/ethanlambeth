@@ -209,7 +209,7 @@ export default function Page() {
             href="mailto:elambethnz@gmail.com"
             className="text-blue-500 hover:underline"
           >
-            elambethnz@gmail.com
+            "elambethnz@gmail.com"
 
           </a>
           . I'll respond as soon as I can.
