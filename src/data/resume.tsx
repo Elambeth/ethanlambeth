@@ -172,6 +172,23 @@ export const DATA = {
   hackathons: [
 
     {
+      title: "Oceania Case Competition",
+      dates: "August 24th - 25th, 2024",
+      location: "Auckland, NZ",
+      description:
+        "For the short case competition placed 1st in our division, and 2nd overall out of 12 Universities from AUS/NZ. For the long case we pitched a strategy for expanding a2 Milk Company's market through partnerships with the China National Committee on Aging and India's National Dairy Development Board. The plan includes age-friendly products and lactose-free options tailored to local markets.",
+      image:
+        "a2milk.png",
+      links: [
+        {
+          title: "Slide Deck",
+          icon: <Icons.powerpoint className="h-4 w-4" />,
+          href: "https://1drv.ms/p/c/c950e0d1c926d918/EeghtaZMyK9EnKDwylNrRDwBwW0l0a_mhoVO3uKnJpAR_w?e=hWICml",
+        },
+
+      ],
+    },
+    {
       title: "OBS Business Case Competition Programme",
       dates: "August 5th - 12th, 2024",
       location: "Dunedin, NZ",
