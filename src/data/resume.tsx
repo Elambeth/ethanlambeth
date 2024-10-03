@@ -74,7 +74,18 @@ export const DATA = {
   },
 
   work: [
-
+    {
+      company: "Skillzea",
+      href: "https://skillzea.net/",
+      badges: [],
+      location: "Dunedin, NZ",
+      title: "Business Development Intern",
+      logoUrl: "/skillzea.jpg",
+      start: "October 2024",
+      end: "Present",
+      description:
+        "In this part-time role, I'll be contributing to customer acquisition and retention strategies, enhancing Skillzea's social media presence, and engaging in promotional activities to support the company's growth.",
+    },
     {
       company: "Age Concern Otago",
       href: "https://ageconcernotago.com/",
