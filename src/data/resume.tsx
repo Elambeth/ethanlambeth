@@ -75,6 +75,18 @@ export const DATA = {
 
   work: [
     {
+      company: "Landsat Technologies ",
+      href: "https://landsat.technology/",
+      badges: [],
+      location: "Texas, USA (Remote)",
+      title: "Business Development Representative",
+      logoUrl: "/landsat_logo.jpg",
+      start: "October 2024",
+      end: "January 2025",
+      description:
+        "I conducted targeted outreach to real estate developers for solar security solutions. I researched and identified key decision-makers within development companies. I created and optimized personalized email campaigns to engage property developers.",
+    },
+    {
       company: "Skillzea",
       href: "https://skillzea.net/",
       badges: [],
@@ -82,7 +94,7 @@ export const DATA = {
       title: "Business Development Intern",
       logoUrl: "/skillzea.jpg",
       start: "October 2024",
-      end: "Present",
+      end: "January 2025",
       description:
         "In this part-time role, I'll be contributing to customer acquisition and retention strategies, enhancing Skillzea's social media presence, and engaging in promotional activities to support the company's growth.",
     },
