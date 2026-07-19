@@ -1,9 +1,10 @@
 // ============================================================================
 // UTOPIA FACTION QUIZ — all content lives here for easy editing.
 // ----------------------------------------------------------------------------
-// Swap the placeholder faction copy, accent colors, and questions for the real
-// ones. The rest of the app reads from these three exports: FACTIONS, QUESTIONS,
-// and the computeResult() helper. No other file needs to change for content.
+// Faction copy, accent colors, and portraits are still placeholders — swap
+// those for finals. Questions use the v3 book-accurate weights. The rest of the
+// app reads from these three exports: FACTIONS, QUESTIONS, and the
+// computeResult() helper. No other file needs to change for content.
 // ============================================================================
 
 export type FactionId =
@@ -59,6 +60,7 @@ export interface Question {
 export const FACTIONS: Faction[] = [
   {
     id: "humanist",
+    image: "/utopia/humanist.png",
     name: "Humanist",
     tagline: "We are the makers and the meaning.",
     description:
@@ -67,6 +69,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "mason",
+    image: "/utopia/mason.png",
     name: "Mason",
     tagline: "The universe is a problem worth solving.",
     description:
@@ -75,6 +78,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "mitsubishi",
+    image: "/utopia/mitsubishi.png",
     name: "Mitsubishi",
     tagline: "Roots before rooftops.",
     description:
@@ -83,6 +87,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "cousin",
+    image: "/utopia/cousin.png",
     name: "Cousin",
     tagline: "To tend the body is to tend the soul.",
     description:
@@ -91,6 +96,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "gordian",
+    image: "/utopia/gordian.png",
     name: "Gordian",
     tagline: "Cut the knot.",
     description:
@@ -99,6 +105,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "europe",
+    image: "/utopia/europe.png",
     name: "Europe",
     tagline: "What is old has earned its place.",
     description:
@@ -107,6 +114,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "utopian",
+    image: "/utopia/utopian.png",
     name: "Utopian",
     tagline: "The horizon is a dare.",
     description:
@@ -115,6 +123,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "delian",
+    image: "/utopia/delian.png",
     name: "Delian",
     tagline: "The center holds because we hold it.",
     description:
@@ -123,6 +132,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "sensayer",
+    image: "/utopia/sensayer.png",
     name: "Sensayer",
     tagline: "All beliefs are true from somewhere.",
     description:
@@ -131,6 +141,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "whitelaw",
+    image: "/utopia/whitelaw.png",
     name: "Whitelaw",
     tagline: "The law is the law.",
     description:
@@ -139,6 +150,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "greylaw",
+    image: "/utopia/greylaw.png",
     name: "Greylaw",
     tagline: "The rules bend; that's what rules are for.",
     description:
@@ -147,6 +159,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "blacklaw",
+    image: "/utopia/blacklaw.png",
     name: "Blacklaw",
     tagline: "Freedom at any cost.",
     description:
@@ -155,6 +168,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "servicer",
+    image: "/utopia/servicer.png",
     name: "Servicer",
     tagline: "Service is the highest freedom.",
     description:
@@ -163,6 +177,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "madames",
+    image: "/utopia/madames.png",
     name: "Madame's",
     tagline: "Embrace the animal.",
     description:
@@ -171,6 +186,7 @@ export const FACTIONS: Faction[] = [
   },
   {
     id: "setset",
+    image: "/utopia/setset.png",
     name: "Set-Set",
     tagline: "More input. More signal.",
     description:
@@ -180,140 +196,94 @@ export const FACTIONS: Faction[] = [
 ];
 
 // ----------------------------------------------------------------------------
-// QUESTIONS — placeholder scenarios. Replace prompts/options/weights with finals.
-// Each option awards weighted points to 1–3 factions; highest total wins.
+// QUESTIONS — v3 structure: 5 questions (Q3 is binary). Book-accurate weights.
+// Each option awards weighted points to 1–2 factions; highest total wins.
 // ----------------------------------------------------------------------------
 
 export const QUESTIONS: Question[] = [
   {
-    id: "last-day",
-    prompt: "The world ends tomorrow. You spend your last day…",
+    id: "good-time",
+    prompt: "Your idea of a good time tonight",
     options: [
       {
-        text: "With the people you love, making one perfect meal.",
-        scores: { humanist: 3, cousin: 1, madames: 1 },
+        text: "Take the vow, chase the frontier, cash in your leisure for the stars.",
+        scores: { utopian: 4, setset: 1 },
       },
       {
-        text: "Finishing the equation you've chased for years.",
-        scores: { mason: 3, delian: 1 },
+        text: "Hold court in the corner, quietly out-argue everyone in the room.",
+        scores: { mason: 3, gordian: 1 },
       },
       {
-        text: "Watching the sky from somewhere green and quiet.",
-        scores: { mitsubishi: 3, sensayer: 1 },
-      },
-      {
-        text: "Making sure someone remembers the plan you set in motion.",
-        scores: { gordian: 3, europe: 1 },
+        text: "Dance until someone cries laughing, surrounded by chosen family.",
+        scores: { humanist: 3, madames: 1 },
       },
     ],
   },
   {
     id: "government",
-    prompt: "Your ideal government…",
+    prompt: "Your ideal government",
     options: [
       {
-        text: "Leaves people free to govern themselves.",
-        scores: { blacklaw: 3, greylaw: 1 },
+        text: "Free people, no interference — live by your own code.",
+        scores: { blacklaw: 4, greylaw: 1 },
       },
       {
-        text: "Honors what our ancestors built and slowly improves it.",
-        scores: { europe: 3, humanist: 1 },
+        text: "Old houses, old rites, slow and careful stewardship.",
+        scores: { europe: 3, delian: 1 },
       },
       {
-        text: "Invests everything in the frontier — space, science, the unknown.",
-        scores: { utopian: 3, mason: 1 },
-      },
-      {
-        text: "Keeps everyone fed, healthy, and cared for.",
-        scores: { cousin: 3, servicer: 1, delian: 1 },
+        text: "Everyone fed, tended, and cared for by those who serve.",
+        scores: { cousin: 3, servicer: 2 },
       },
     ],
   },
   {
     id: "trust",
-    prompt: "You trust…",
+    prompt: "You trust",
     options: [
       {
         text: "The data, even when it's uncomfortable.",
-        scores: { mason: 2, setset: 3 },
+        scores: { setset: 3, mason: 1 },
       },
       {
-        text: "Your gut, your appetites, your honest impulses.",
-        scores: { madames: 3, blacklaw: 1 },
-      },
-      {
-        text: "People who've earned it through service.",
-        scores: { servicer: 3, humanist: 1 },
-      },
-      {
-        text: "The process — slow, boring, and fair.",
-        scores: { delian: 2, whitelaw: 3, europe: 1 },
-      },
-    ],
-  },
-  {
-    id: "stranger",
-    prompt: "A stranger weeps in front of you. You…",
-    options: [
-      {
-        text: "Sit with them until they're ready to talk.",
-        scores: { sensayer: 3, cousin: 2 },
-      },
-      {
-        text: "Hand them a tissue and a plan.",
-        scores: { gordian: 2, delian: 1 },
-      },
-      {
-        text: "Make them laugh, badly, until they do.",
-        scores: { humanist: 3, madames: 1 },
-      },
-      {
-        text: "Look up what's wrong and fix the root cause.",
-        scores: { mason: 2, whitelaw: 1 },
+        text: "Whoever's earned it through years of quiet service.",
+        scores: { servicer: 3, sensayer: 1 },
       },
     ],
   },
   {
     id: "rules",
-    prompt: "Rules are…",
+    prompt: "Rules are",
     options: [
       {
-        text: "The point. Without them, nothing works.",
-        scores: { whitelaw: 3, delian: 1 },
+        text: "The whole point — chaos without them.",
+        scores: { whitelaw: 4 },
       },
       {
-        text: "A starting point you adjust as needed.",
-        scores: { greylaw: 3, europe: 1 },
+        text: "A starting point, adjusted as needed.",
+        scores: { greylaw: 4, europe: 1 },
       },
       {
-        text: "Chains I'd rather not wear.",
-        scores: { blacklaw: 3, utopian: 1 },
-      },
-      {
-        text: "Code. Rewrite them if you can do better.",
-        scores: { setset: 2, mason: 2, utopian: 1 },
+        text: "Chains, worn only until you can cut them.",
+        scores: { blacklaw: 2, gordian: 2 },
       },
     ],
   },
   {
     id: "home",
-    prompt: "Home is…",
+    prompt: "Home is",
     options: [
       {
-        text: "Wherever my people are.",
-        scores: { humanist: 3, servicer: 1 },
+        text: "Wherever your people are, loud and laughing.",
+        scores: { humanist: 3, madames: 2 },
       },
       {
-        text: "A place — soil, weather, seasons.",
-        scores: { mitsubishi: 3, europe: 1 },
+        text: "Soil, weather, the land itself.",
+        scores: { mitsubishi: 4, europe: 1 },
       },
       {
-        text: "A state of mind I carry with me.",
-        scores: { sensayer: 2, utopian: 2 },
-      },
-      {
-        text: "The network I'm always plugged into.",
-        scores: { setset: 3, gordian: 1 },
+        text: "A state of mind, carried with you, listened for.",
+        scores: { sensayer: 3, delian: 1 },
       },
     ],
   },

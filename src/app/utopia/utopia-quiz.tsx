@@ -7,7 +7,7 @@ import {
   motion,
   useReducedMotion,
 } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   accentColor,
   computeResult,
@@ -46,6 +46,13 @@ export default function UtopiaQuiz() {
       }
     }
   }, []);
+
+  // A tiny haptic the moment a result resolves — felt, not heard.
+  useEffect(() => {
+    if (result && typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(12);
+    }
+  }, [result]);
 
   const total = QUESTIONS.length;
   const progress =
@@ -150,7 +157,7 @@ export default function UtopiaQuiz() {
                 Begin
               </Button>
               <p className="mt-6 text-xs text-muted-foreground/80">
-                Framework in progress — questions &amp; art are placeholders.
+                Art &amp; descriptions are still placeholders.
               </p>
             </motion.section>
           )}
@@ -245,21 +252,32 @@ export default function UtopiaQuiz() {
             >
               <Portrait faction={result} />
 
-              <p className="mt-6 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                Your Hive
-              </p>
-              <h1
-                className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl"
-                style={{ color: accentColor(result.accent) }}
+              <motion.div
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: reduceMotion ? 0 : 0.32,
+                  ease: "easeOut",
+                }}
+                className="flex w-full flex-col items-center"
               >
-                {result.name}
-              </h1>
-              <p className="mt-2 text-lg italic text-muted-foreground">
-                {result.tagline}
-              </p>
-              <p className="mt-4 text-base leading-relaxed text-foreground/90">
-                {result.description}
-              </p>
+                <p className="mt-6 text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                  Your Hive
+                </p>
+                <h1
+                  className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl"
+                  style={{ color: accentColor(result.accent) }}
+                >
+                  {result.name}
+                </h1>
+                <p className="mt-2 text-lg italic text-muted-foreground">
+                  {result.tagline}
+                </p>
+                <p className="mt-4 text-base leading-relaxed text-foreground/90">
+                  {result.description}
+                </p>
+              </motion.div>
 
               <div className="mt-8 flex w-full max-w-xs flex-col gap-3">
                 <Button
@@ -291,30 +309,83 @@ export default function UtopiaQuiz() {
 }
 
 function Portrait({ faction }: { faction: Faction }) {
+  const reduceMotion = useReducedMotion();
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const from = accentColor(faction.accent, 0);
   const to = accentColor(faction.accent, -28);
 
-  if (faction.image) {
+  // Cached images can finish before onLoad attaches — pick those up too.
+  useEffect(() => {
+    if (imgRef.current?.complete) setLoaded(true);
+  }, []);
+
+  if (!faction.image) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={faction.image}
-        alt={faction.name}
-        className="aspect-[4/5] w-full max-w-[18rem] rounded-2xl object-cover"
-      />
+      <div
+        className="flex aspect-[3/5] w-full max-w-[15rem] items-center justify-center overflow-hidden rounded-2xl"
+        style={{ background: `linear-gradient(150deg, ${from}, ${to})` }}
+        aria-label={`${faction.name} portrait`}
+        role="img"
+      >
+        <span className="select-none font-sans text-7xl text-white/85">
+          {faction.name.charAt(0)}
+        </span>
+      </div>
     );
   }
 
   return (
-    <div
-      className="flex aspect-[4/5] w-full max-w-[18rem] items-center justify-center overflow-hidden rounded-2xl"
-      style={{ background: `linear-gradient(150deg, ${from}, ${to})` }}
-      aria-label={`${faction.name} portrait`}
-      role="img"
-    >
-      <span className="select-none font-sans text-7xl text-white/85">
-        {faction.name.charAt(0)}
-      </span>
+    <div className="relative mx-auto w-full max-w-[15rem]">
+      {/* Accent halo — the faction's color blooms behind the card. */}
+      <motion.div
+        aria-hidden
+        className="absolute -inset-6 z-0 rounded-[2rem] blur-2xl"
+        style={{
+          background: `radial-gradient(closest-side, ${from}, transparent 70%)`,
+        }}
+        initial={reduceMotion ? false : { opacity: 0, scale: 0.8 }}
+        animate={{ opacity: reduceMotion ? 0.45 : 0.6, scale: 1 }}
+        transition={{
+          duration: 0.6,
+          delay: reduceMotion ? 0 : 0.12,
+          ease: "easeOut",
+        }}
+      />
+      <div className="relative z-10 aspect-[3/5] w-full overflow-hidden rounded-2xl bg-card">
+        <motion.img
+          ref={imgRef}
+          // eslint-disable-next-line @next/next/no-img-element
+          src={faction.image}
+          alt={faction.name}
+          onLoad={() => setLoaded(true)}
+          className="absolute inset-0 h-full w-full object-cover"
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
+          animate={
+            loaded
+              ? reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 1, scale: 1 }
+              : undefined
+          }
+          transition={
+            reduceMotion
+              ? { duration: 0.3 }
+              : { type: "spring", stiffness: 170, damping: 16 }
+          }
+        />
+        {/* Develop curtain: the accent field wipes away to reveal the figure. */}
+        {!reduceMotion && (
+          <motion.div
+            aria-hidden
+            className="absolute inset-0"
+            style={{ background: `linear-gradient(125deg, ${to}, ${from})` }}
+            initial={{ clipPath: "inset(0 0 0 0)" }}
+            animate={loaded ? { clipPath: "inset(0 0 0 100%)" } : undefined}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          />
+        )}
+      </div>
     </div>
   );
 }
