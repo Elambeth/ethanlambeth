@@ -66,3 +66,47 @@ async function getAllPosts(dir: string) {
 export async function getBlogPosts() {
   return getAllPosts(path.join(process.cwd(), "content"));
 }
+
+export type BlogStreamItem = {
+  type: "post" | "thought";
+  slug: string;
+  date: string;
+  title?: string; // posts
+  summary?: string; // posts
+  bodyHtml?: string; // thoughts (rendered)
+};
+
+async function getThoughtItems(): Promise<BlogStreamItem[]> {
+  const dir = path.join(process.cwd(), "content", "thoughts");
+  if (!fs.existsSync(dir)) return [];
+  const files = fs.readdirSync(dir).filter((file) => path.extname(file) === ".md");
+
+  return Promise.all(
+    files.map(async (file) => {
+      const filePath = path.join(dir, file);
+      const source = fs.readFileSync(filePath, "utf-8");
+      const { content, data } = matter(source);
+      return {
+        type: "thought" as const,
+        slug: path.basename(file, ".md"),
+        date: String(data.date ?? ""),
+        bodyHtml: await markdownToHTML(content),
+      };
+    })
+  );
+}
+
+/** Merged stream of posts (link out) and thoughts (render inline), unsorted. */
+export async function getBlogStream(): Promise<BlogStreamItem[]> {
+  const [posts, thoughts] = await Promise.all([getBlogPosts(), getThoughtItems()]);
+  return [
+    ...posts.map((post) => ({
+      type: "post" as const,
+      slug: post.slug,
+      title: post.metadata.title,
+      summary: post.metadata.summary,
+      date: post.metadata.publishedAt,
+    })),
+    ...thoughts,
+  ];
+}
