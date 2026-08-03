@@ -1,0 +1,86 @@
+---
+title: "Keyboard Layout"
+publishedAt: "2026-08-03"
+summary: "The three main layers of my split keyboard, plus the Hyprland and tmux shortcuts mapped onto them."
+---
+
+I type on a Corne v4 split keyboard. These are the three layers I live in — base for typing, lower for numbers and navigation, raise for symbols.
+
+## Base
+
+```
+ [ TAB  ] [  ;   ] [  ,   ] [  .   ] [  P   ] [  Y   ] [OSM(⇧)]          [ LGUI ] [  F   ] [  G   ] [  C   ] [  R   ] [  L   ] [ BSPC ]
+ [ LSFT ] [  A   ] [  O   ] [  E   ] [  U   ] [  I   ] [ CAPS ]          [ LALT ] [  D   ] [  H   ] [  T   ] [  N   ] [  S   ] [ LGUI ]
+ [ LCTL ] [  '   ] [  Q   ] [  J   ] [  K   ] [  X   ]                            [  B   ] [  M   ] [  W   ] [  V   ] [  Z   ] [ ESC  ]
+                            [ LALT ] [MO(1) ] [ SPC  ]                            [ ENT  ] [MO(2) ] [TG(4) ]
+```
+
+## Lower
+
+Numbers, function keys, and navigation.
+
+```
+ [ TAB  ] [  1   ] [  2   ] [  3   ] [  4   ] [  5   ] [ LCTL ]          [TG(4) ] [  6   ] [  7   ] [  8   ] [  9   ] [  0   ] [ DEL  ]
+ [  F1  ] [  F2  ] [  F3  ] [  F4  ] [  F5  ] [  F6  ] [ LALT ]          [ RALT ] [  ·   ] [  ←   ] [  ↓   ] [  ↑   ] [  →   ] [  ;   ]
+ [  F7  ] [  F8  ] [  F9  ] [ F10  ] [ F11  ] [ F12  ]                            [  ·   ] [ Mute ] [ Vol- ] [ Vol+ ] [  ·   ] [  ·   ]
+                            [ LGUI ] [  ▽   ] [ SPC  ]                            [ LSFT ] [ LGUI ] [ RGUI ]
+```
+
+## Raise
+
+Symbols and editing keys.
+
+```
+ [ TAB  ] [  ⇧   ] [  ⇧   ] [  ⇧   ] [  ⇧   ] [  ⇧   ] [ LCTL ]          [ RCTL ] [  ⇧   ] [  ⇧   ] [  ⇧   ] [  ⇧   ] [  ⇧   ] [ DEL  ]
+ [  ⇧   ] [  ⇧   ] [  '   ] [  ⇧   ] [  -   ] [  /   ] [ LALT ]          [ RALT ] [  \   ] [ Home ] [ PgUp ] [ PgDn ] [ End  ] [ LGUI ]
+ [ LSFT ] [PrtSc ] [LBRACK] [RBRACK] [  ⇧   ] [  `   ]                            [  ⇧   ] [  =   ] [  ⇧   ] [  ⇧   ] [  \   ] [  ⇧   ]
+                            [ LGUI ] [ LCTL ] [ SPC  ]                            [ ENT  ] [  ▽   ] [ RGUI ]
+```
+
+## Legend
+
+- `MO(1)` / `MO(2)` — hold for Lower / Raise
+- `OSM(⇧)` — one-shot shift (applies to the next key only)
+- `TG(4)` — toggles the Mouse layer
+- `·` unassigned · `▽` transparent (falls through to the layer below)
+- `L`/`R` prefix = left/right hand · `SFT` shift · `CTL` control · `ALT` alt · `GUI` cmd
+
+## Shortcuts
+
+The layout feeds a Hyprland + tmux setup. The main modifier is `⌘` (Super — the right-hand `LGUI` key); **Ctrl** is the left-pinky column (the `Tab` / `⇧` / `Ctrl` stack).
+
+**At a glance:** new terminal `⌘+U` · app launcher `⌘+K` · close window `⌘+C` · tmux prefix `Ctrl+T`.
+
+### Hyprland (mod `⌘`)
+
+| Key | Action |
+|---|---|
+| `⌘+U` | Terminal (kitty) |
+| `⌘+K` | App launcher (rofi) |
+| `⌘+L` | Clipboard history |
+| `⌘+C` | Close window |
+| `⌘+V` | Toggle floating |
+| `⌘+F` | Fullscreen |
+| `⌘+N` | Center window |
+| `⌘+1…0` | Switch workspace |
+| `⌘+←/→/↑/↓` | Move focus |
+| `⌘+⇧+←/→/↑/↓` | Move window |
+| `⌘+R` | Toggle color theme |
+| `⌘+W` | Random wallpaper |
+
+### tmux (prefix `Ctrl+T`)
+
+Press `Ctrl+T`, then:
+
+| Key | Action |
+|---|---|
+| `h` / `v` | Split right / down |
+| `c` | New window |
+| `Space` | Copy mode (vi keys) |
+| `g` | Git commit (popup) |
+| `n` | Daily note (popup) |
+| `Ctrl+c` | New window running `claude` |
+
+---
+
+*Last updated August 3, 2026.*
