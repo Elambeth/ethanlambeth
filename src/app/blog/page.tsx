@@ -1,4 +1,4 @@
-import { getBlogStream } from "@/data/blog";
+import { getBlogStream, type BlogStreamItem } from "@/data/blog";
 import Link from "next/link";
 
 export const metadata = {
@@ -16,37 +16,65 @@ function formatAbsolute(date: string) {
   });
 }
 
-export default async function BlogPage() {
-  const items = (await getBlogStream()).sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+const byDateDesc = (a: BlogStreamItem, b: BlogStreamItem) =>
+  new Date(b.date).getTime() - new Date(a.date).getTime();
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="flex items-center gap-4 mb-6">
+      <span className="text-sm text-muted-foreground tracking-wide">
+        {children}
+      </span>
+      <span className="h-px flex-1 bg-border" />
+    </h2>
   );
+}
+
+export default async function BlogPage() {
+  const items = await getBlogStream();
+  const posts = items.filter((i) => i.type === "post").sort(byDateDesc);
+  const notes = items.filter((i) => i.type === "thought").sort(byDateDesc);
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-12">
       <h1 className="font-medium text-2xl mb-8 tracking-tighter">blog</h1>
-      {items.map((item) =>
-        item.type === "post" ? (
-          <Link
-            key={`post-${item.slug}`}
-            className="flex flex-col space-y-1 mb-4"
-            href={`/blog/${item.slug}`}
-          >
-            <p className="tracking-tight">{item.title}</p>
-            <p className="text-xs text-muted-foreground">
-              {formatAbsolute(item.date)}
-            </p>
-          </Link>
-        ) : (
-          <article key={`thought-${item.slug}`} className="mb-10">
-            <p className="text-xs text-muted-foreground mb-2">
-              {formatAbsolute(item.date)}
-            </p>
-            <div
-              className="prose dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: item.bodyHtml ?? "" }}
-            />
-          </article>
-        )
+
+      {posts.length > 0 && (
+        <section className="mb-14">
+          <SectionLabel>writing</SectionLabel>
+          {posts.map((item) => (
+            <Link
+              key={`post-${item.slug}`}
+              className="flex flex-col space-y-1 mb-6"
+              href={`/blog/${item.slug}`}
+            >
+              <p className="tracking-tight">{item.title}</p>
+              {item.summary && (
+                <p className="text-sm text-muted-foreground">{item.summary}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                {formatAbsolute(item.date)}
+              </p>
+            </Link>
+          ))}
+        </section>
+      )}
+
+      {notes.length > 0 && (
+        <section>
+          <SectionLabel>notes</SectionLabel>
+          {notes.map((item) => (
+            <article key={`thought-${item.slug}`} className="mb-10">
+              <p className="text-xs text-muted-foreground mb-2">
+                {formatAbsolute(item.date)}
+              </p>
+              <div
+                className="prose dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: item.bodyHtml ?? "" }}
+              />
+            </article>
+          ))}
+        </section>
       )}
     </main>
   );
