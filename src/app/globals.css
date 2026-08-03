@@ -103,12 +103,10 @@
     background-color: var(--shiki-light-bg);
   }
    
-  @media (prefers-color-scheme: dark) {
-    code[data-theme*=" "],
-    code[data-theme*=" "] span {
-      color: var(--shiki-dark);
-      background-color: var(--shiki-dark-bg);
-    }
+  .dark code[data-theme*=" "],
+  .dark code[data-theme*=" "] span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
   }
   
   /* Line numbers for code blocks */
@@ -121,17 +119,7 @@
     content: counter(line);
     @apply inline-block w-4 mr-4 text-right text-gray-500;
   }
- 
-  code > [data-line]::before {
-    counter-increment: line;
-    content: counter(line);
-    display: inline-block;
-    width: 1rem;
-    margin-right: 2rem;
-    text-align: right;
-    color: gray;
-  }
- 
+
   code[data-line-numbers-max-digits="2"] > [data-line]::before {
     width: 2rem;
   }
@@ -142,7 +130,7 @@
   
   /* Prose improvements for blog content */
   .prose {
-    @apply text-gray-700 dark:text-gray-300;
+    @apply font-sans text-gray-700 dark:text-gray-300;
     max-width: none;
   }
   
