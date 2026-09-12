@@ -107,7 +107,7 @@ export default function BlogReader({ entries }: { entries: BlogReaderEntry[] }) 
 
       <div className="relative">
         {/* Desktop: sticky index of all writing */}
-        <aside className="absolute inset-y-0 -left-6 hidden w-56 xl:block">
+        <aside className="absolute inset-y-0 -left-6 z-10 hidden w-56 xl:block">
           <div className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto pb-4">
             <nav>
               {entries.map((entry) => (
