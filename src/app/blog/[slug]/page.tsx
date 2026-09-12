@@ -4,6 +4,7 @@ import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import ImageCarousel from "@/components/image-carousel";
 
 export async function generateStaticParams() {
   let posts = await getBlogPosts();
@@ -100,6 +101,9 @@ export default async function Blog({
           </p>
         </Suspense>
       </div>
+      {post.metadata.gallery && (
+        <ImageCarousel images={post.metadata.gallery} />
+      )}
       <article
         className="prose dark:prose-invert"
         dangerouslySetInnerHTML={{ __html: post.source }}

@@ -4,16 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Noto_Serif as FontSans } from "next/font/google";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-sans",
-  display: "swap",
-  style: ["normal", "italic"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(DATA.url),
@@ -61,7 +54,8 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          GeistSans.variable,
+          GeistMono.variable
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>

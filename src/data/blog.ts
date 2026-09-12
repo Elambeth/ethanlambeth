@@ -12,6 +12,11 @@ type Metadata = {
   publishedAt: string;
   summary: string;
   image?: string;
+  gallery?: Array<{
+    src: string;
+    alt: string;
+    label: string;
+  }>;
 };
 
 function getMDXFiles(dir: string) {
@@ -39,7 +44,8 @@ export async function markdownToHTML(markdown: string) {
 export async function getPost(slug: string) {
   const filePath = path.join("content", `${slug}.mdx`);
   let source = fs.readFileSync(filePath, "utf-8");
-  const { content: rawContent, data: metadata } = matter(source);
+  const { content: rawContent, data } = matter(source);
+  const metadata = data as Metadata;
   const content = await markdownToHTML(rawContent);
   return {
     source: content,
