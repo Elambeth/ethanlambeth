@@ -107,13 +107,13 @@ export default async function Blog({
             </p>
           )}
         </header>
-        {post.metadata.gallery && (
-          <ImageCarousel images={post.metadata.gallery} />
-        )}
         <article
           className="prose article-prose dark:prose-invert"
           dangerouslySetInnerHTML={{ __html: post.source }}
         />
+        {post.metadata.gallery && (
+          <ImageCarousel images={post.metadata.gallery} />
+        )}
         <footer className="mt-16 border-t border-border pt-6">
           <Link
             href="/blog"
