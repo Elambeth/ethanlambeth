@@ -20,7 +20,7 @@ export default async function BlogPage() {
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-16 sm:px-6 sm:pt-20">
       <header className="max-w-2xl">
-        <h1 className="text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
+        <h1 className="text-3xl font-semibold tracking-[-0.035em]">
           Writing
         </h1>
         <p className="mt-4 max-w-lg text-base leading-7 text-muted-foreground">
