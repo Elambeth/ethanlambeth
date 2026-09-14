@@ -1,11 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -13,22 +17,62 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="max-w-2xl mx-auto px-6 py-6 flex justify-between items-center">
-      <div className="flex gap-4">
-        <Link href="/" className="hover:underline">
-          Home
-        </Link>
-        <Link href="/blog" className="hover:underline">
-          Blog
-        </Link>
-      </div>
-
-      <button
-        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="text-sm hover:underline"
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-md">
+      <nav
+        aria-label="Main navigation"
+        className="mx-auto flex h-16 max-w-3xl items-center justify-between px-5 sm:px-6"
       >
-        {mounted && theme === "dark" ? "Light" : "Dark"}
-      </button>
-    </nav>
+        <Link
+          href="/"
+          className="rounded-sm text-sm font-semibold tracking-[-0.01em] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+        >
+          Ethan Lambeth
+        </Link>
+
+        <div className="flex items-center gap-1">
+          <Link
+            href="/"
+            aria-current={pathname === "/" ? "page" : undefined}
+            className={cn(
+              "hidden rounded-md px-3 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring sm:block",
+              pathname === "/"
+                ? "font-medium text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Home
+          </Link>
+          <Link
+            href="/blog"
+            aria-current={pathname.startsWith("/blog") ? "page" : undefined}
+            className={cn(
+              "rounded-md px-3 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+              pathname.startsWith("/blog")
+                ? "font-medium text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Writing
+          </Link>
+          <span className="mx-1 h-4 w-px bg-border" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="flex size-10 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label={
+              mounted && theme === "dark"
+                ? "Use light appearance"
+                : "Use dark appearance"
+            }
+          >
+            {mounted && theme === "dark" ? (
+              <Sun className="size-4" aria-hidden="true" />
+            ) : (
+              <Moon className="size-4" aria-hidden="true" />
+            )}
+          </button>
+        </div>
+      </nav>
+    </header>
   );
 }

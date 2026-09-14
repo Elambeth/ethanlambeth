@@ -1,9 +1,8 @@
 import { getBlogPosts, getPost } from "@/data/blog";
 import { DATA } from "@/data/resume";
-import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import ImageCarousel from "@/components/image-carousel";
 
 export async function generateStaticParams() {
@@ -68,7 +67,7 @@ export default async function Blog({
   }
 
   return (
-    <main id="blog" className="max-w-2xl mx-auto px-6 py-12">
+    <main id="blog" className="mx-auto max-w-3xl px-5 pb-24 pt-12 sm:px-6 sm:pt-16">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -91,23 +90,39 @@ export default async function Blog({
           }),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tighter">
-        {post.metadata.title}
-      </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-        <Suspense fallback={<p className="h-5" />}>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {formatDate(post.metadata.publishedAt)}
-          </p>
-        </Suspense>
+      <div className="max-w-2xl">
+        <Link
+          href="/blog"
+          className="rounded-sm text-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          All writing
+        </Link>
+        <header className="mb-12 mt-8">
+          <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
+            {post.metadata.title}
+          </h1>
+          {post.metadata.summary && (
+            <p className="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
+              {post.metadata.summary}
+            </p>
+          )}
+        </header>
+        {post.metadata.gallery && (
+          <ImageCarousel images={post.metadata.gallery} />
+        )}
+        <article
+          className="prose article-prose dark:prose-invert"
+          dangerouslySetInnerHTML={{ __html: post.source }}
+        />
+        <footer className="mt-16 border-t border-border pt-6">
+          <Link
+            href="/blog"
+            className="rounded-sm text-sm font-medium outline-none hover:underline hover:underline-offset-4 focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            More writing
+          </Link>
+        </footer>
       </div>
-      {post.metadata.gallery && (
-        <ImageCarousel images={post.metadata.gallery} />
-      )}
-      <article
-        className="prose dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: post.source }}
-      ></article>
     </main>
   );
 }
