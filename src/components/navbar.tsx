@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
@@ -24,24 +25,14 @@ export default function Navbar() {
       >
         <Link
           href="/"
-          className="rounded-sm text-sm font-semibold tracking-[-0.01em] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+          aria-label="Home"
+          aria-current={pathname === "/" ? "page" : undefined}
+          className="flex size-10 items-center justify-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
         >
-          Ethan Lambeth
+          <Image src="/BlueCircle.svg" alt="" width={24} height={24} priority />
         </Link>
 
         <div className="flex items-center gap-1">
-          <Link
-            href="/"
-            aria-current={pathname === "/" ? "page" : undefined}
-            className={cn(
-              "hidden rounded-md px-3 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring sm:block",
-              pathname === "/"
-                ? "font-medium text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Home
-          </Link>
           <Link
             href="/blog"
             aria-current={pathname.startsWith("/blog") ? "page" : undefined}
