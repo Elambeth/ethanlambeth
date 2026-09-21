@@ -33,14 +33,9 @@ export default function Page() {
         >
           Beliefs I currently have:
         </h2>
-        <ul className="mt-5 space-y-2.5">
+        <ul className="mt-5 list-disc space-y-2.5 pl-5 text-[0.95rem] leading-7 marker:text-muted-foreground">
           {beliefs.map((belief) => (
-            <li key={belief} className="flex gap-3 text-[0.95rem] leading-7">
-              <span aria-hidden="true" className="text-muted-foreground">
-                —
-              </span>
-              <span>{belief}</span>
-            </li>
+            <li key={belief}>{belief}</li>
           ))}
         </ul>
       </section>
@@ -52,14 +47,9 @@ export default function Page() {
         >
           Ideas I am currently chewing on:
         </h2>
-        <ul className="mt-5 space-y-2.5">
+        <ul className="mt-5 list-disc space-y-2.5 pl-5 text-[0.95rem] leading-7 marker:text-muted-foreground">
           {ideas.map((idea) => (
-            <li key={idea} className="flex gap-3 text-[0.95rem] leading-7">
-              <span aria-hidden="true" className="text-muted-foreground">
-                —
-              </span>
-              <span>{idea}</span>
-            </li>
+            <li key={idea}>{idea}</li>
           ))}
         </ul>
       </section>
