@@ -31,7 +31,7 @@ export default function Page() {
           id="beliefs-heading"
           className="border-b border-border pb-3 text-base font-semibold"
         >
-          beliefs i currently have:
+          Beliefs I currently have:
         </h2>
         <ul className="mt-5 space-y-2.5">
           {beliefs.map((belief) => (
@@ -50,7 +50,7 @@ export default function Page() {
           id="ideas-heading"
           className="border-b border-border pb-3 text-base font-semibold"
         >
-          ideas i am currently chewing on:
+          Ideas I am currently chewing on:
         </h2>
         <ul className="mt-5 space-y-2.5">
           {ideas.map((idea) => (
