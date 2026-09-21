@@ -1,12 +1,12 @@
 const beliefs = [
-  "Data is more fundamental than the widget, but you need widgets to know what data to prune",
-  "The cognitive benefits of handwriting are mostly just that it takes longer than typing",
-  "Starting again from scratch hurts, but it is far more freeing than patching what you already have",
+  'Voice is not "the next interface".',
+  "AI safety an extremely important problem",
 ];
 
 const ideas = [
-  "A live ad-blocker — AR glasses that replace every billboard and physical ad with artwork",
-  "Whether I am pruning data or making output widgets day to day, and which one should come first",
+  "What conflict between large swarms of agents could look like.",
+  "Interfaces, broadly.",
+  "What an AR world would look like. What are the social norms that will form and dissapear (Arguably also an interface question)",
 ];
 
 export default function Page() {
@@ -29,7 +29,7 @@ export default function Page() {
       <section className="mt-16" aria-labelledby="beliefs-heading">
         <h2
           id="beliefs-heading"
-          className="border-b border-border pb-3 text-sm font-medium"
+          className="border-b border-border pb-3 text-base font-semibold"
         >
           beliefs i currently have:
         </h2>
@@ -48,7 +48,7 @@ export default function Page() {
       <section className="mt-16" aria-labelledby="ideas-heading">
         <h2
           id="ideas-heading"
-          className="border-b border-border pb-3 text-sm font-medium"
+          className="border-b border-border pb-3 text-base font-semibold"
         >
           ideas i am currently chewing on:
         </h2>
