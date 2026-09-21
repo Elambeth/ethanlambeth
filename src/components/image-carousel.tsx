@@ -27,7 +27,7 @@ export default function ImageCarousel({ images }: { images: CarouselImage[] }) {
 
   return (
     <section
-      className="not-prose my-8 max-w-2xl"
+      className="not-prose mx-auto my-8 w-1/2 max-w-[21rem]"
       aria-roledescription="carousel"
       aria-label="Advertising layers"
     >
@@ -67,14 +67,14 @@ export default function ImageCarousel({ images }: { images: CarouselImage[] }) {
                   priority={imageIndex === 0}
                   sizes={
                     isLastImage
-                      ? "(min-width: 1024px) 672px, calc(100vw - 3rem)"
-                      : "(min-width: 1024px) 588px, 77vw"
+                      ? "(min-width: 720px) 336px, (min-width: 640px) calc(50vw - 1.5rem), calc(50vw - 1.25rem)"
+                      : "(min-width: 720px) 294px, (min-width: 640px) calc(43.75vw - 1.3125rem), calc(43.75vw - 1.09375rem)"
                   }
                   className="select-none object-cover"
                   draggable={false}
                 />
                 <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <p className="absolute bottom-6 left-6 right-6 m-0 text-3xl font-bold leading-none tracking-tight text-white drop-shadow-sm sm:bottom-8 sm:left-8 sm:text-4xl">
+                <p className="absolute bottom-3 left-3 right-3 m-0 text-base font-bold leading-none tracking-tight text-white drop-shadow-sm sm:bottom-4 sm:left-4 sm:text-lg">
                   {image.label}
                 </p>
               </article>
