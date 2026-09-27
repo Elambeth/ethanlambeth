@@ -11,8 +11,16 @@ test("password checks, session forgery/expiry/rotation, and fail-closed rate lim
   assert.equal(await checkPassword("incorrect"), false);
   assert.equal(await checkPassword({ password }), false);
   assert.equal(await checkPassword("x".repeat(257)), false);
+  const adminPassword = randomBytes(24).toString("hex");
+  process.env.WHAT_IS_THIS_ADMIN_PASSWORD_HASH = await hashPassword(adminPassword);
+  assert.equal(await checkPassword(password, "admin"), false);
+  assert.equal(await checkPassword(adminPassword, "admin"), true);
   const now = Date.now();
   const session = issueSession(now);
+  const adminSession = issueSession(now, "admin");
+  assert.equal(validSession(session, now, "admin"), false);
+  assert.equal(validSession(adminSession, now), false);
+  assert.equal(validSession(adminSession, now, "admin"), true);
   assert.equal(validSession(session, now), true);
   assert.equal(validSession(session, now + SESSION_SECONDS * 1000), false);
   assert.equal(validSession(undefined), false);
@@ -25,6 +33,7 @@ test("password checks, session forgery/expiry/rotation, and fail-closed rate lim
   delete process.env.UPSTASH_REDIS_REST_TOKEN;
   for (let i = 0; i < 5; i++) assert.equal(await allowAttempt(), true);
   assert.equal(await allowAttempt(), false);
+  assert.equal(await allowAttempt("admin"), true, "Viewer throttling does not lock out the admin");
   process.env.NODE_ENV = "production";
   await assert.rejects(allowAttempt(), /shared attempt limiter/);
   process.env.UPSTASH_REDIS_REST_URL = "https://redis.example";

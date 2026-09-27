@@ -31,3 +31,19 @@ All login attempts share a limit of five per 15 minutes, including successful at
 Local development uses an in-memory limiter; only production requires persistent Redis. Run `node --test test/private-auth.test.mjs` for password, session, and limiter checks. Keep the Next.js server on a supported patched release before deploying.
 
 References: [Next.js authentication](https://nextjs.org/docs/app/guides/authentication), [OWASP authentication guidance](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html), [Upstash REST API](https://upstash.com/docs/redis/features/restapi).
+
+## Admin editor and uploads
+
+Open `/what-is-this/admin`. It has a separate admin password, two image pickers, image descriptions, and a message field. Save changes publishes the complete page; visitors see the new content on their next load or refresh. The viewing password never grants editing access.
+
+Run `node scripts/setup-private-admin.mjs` once after local setup. It generates a random admin password in `.env.admin.local` and adds only its salted hash to `.env.local`. Both files are gitignored. The admin password is intentionally different from the visitor password. This change adds role separation to session signatures, so previously issued sessions must sign in again.
+
+For **production uploads**, create a **Private** Vercel Blob store in the project's Storage tab and connect it to the deployment environment. This supplies `BLOB_READ_WRITE_TOKEN`. Also set `WHAT_IS_THIS_ADMIN_PASSWORD_HASH` from the local environment file, alongside the existing viewer hash, session secret, HTTPS origin, and persistent Redis limiter. Keep preview and production storage separate if preview edits should not affect the live page. No storage resource is provisioned by this code change.
+
+With Blob configured, the page reads its message and image references from a private manifest. Uploads are private, are served through authenticated routes, and survive redeploys. The admin can start from an empty store and upload both images; there is no need to inject private files into the build. Manifest reads bypass the Blob cache so saves are immediately visible. Without Blob, local development still reads and saves the gitignored private folder; production upload requests fail closed rather than writing to an ephemeral filesystem. The original read-only bundled-file deployment remains available when Blob is absent.
+
+Only still JPEG, PNG, and WebP uploads are supported. The browser resizes large photos before sending a request under Vercel's 4.5 MB request limit. The server enforces a 4 MB body limit, decodes the file (up to 40 megapixels), and re-encodes it as WebP without source metadata. SVG uploads are rejected. Both images are validated before publication; changing one image preserves the other. Saving does not rebuild the site. If multiple admin tabs save at once, the last completed save wins.
+
+Old image objects are retained privately so concurrent readers do not lose an image during a save. Unreferenced uploads can be removed from the private store when no longer needed. No delete operation is exposed to visitors. Never deploy `.env.admin.local` or place it in the private content directory.
+
+References: [Vercel private Blob storage](https://vercel.com/docs/vercel-blob/private-storage), [server upload limits](https://vercel.com/docs/vercel-blob/server-upload), [consistent private reads](https://vercel.com/changelog/vercel-blob-now-supports-consistent-reads-on-private-storage).
