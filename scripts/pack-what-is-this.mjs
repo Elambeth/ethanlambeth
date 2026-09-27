@@ -24,11 +24,11 @@ try {
 } catch {
   fail(`${root}/content.json is missing or not valid JSON.`);
 }
-const { text, firstAlt, lastAlt, firstImage, lastImage } = data ?? {};
-const textProblem = [text, firstAlt, lastAlt].some((value, index) => {
-  const limit = [1200, 240, 240][index];
+const { firstText, lastText, firstAlt, lastAlt, firstImage, lastImage } = data ?? {};
+const textProblem = [firstText, lastText, firstAlt, lastAlt].some((value, index) => {
+  const limit = [1200, 1200, 240, 240][index];
   return typeof value !== "string" || !value.trim() || value.length > limit;
-}) ? "text (1–1200 characters) and both image descriptions (1–240 characters)" : null;
+}) ? "both messages (1–1200 characters) and both image descriptions (1–240 characters)" : null;
 if (textProblem || typeof firstImage !== "string" || typeof lastImage !== "string" ||
   !namePattern.test(firstImage) || !namePattern.test(lastImage)) {
   fail(`content.json needs ${textProblem || "valid image fields"} and image filenames like first.webp.`);
@@ -76,7 +76,7 @@ if (password.length < 16) {
 }
 
 const plaintext = new TextEncoder().encode(JSON.stringify({
-  v: 1, text: text.trim(), firstAlt: firstAlt.trim(), lastAlt: lastAlt.trim(),
+  v: 2, firstText: firstText.trim(), lastText: lastText.trim(), firstAlt: firstAlt.trim(), lastAlt: lastAlt.trim(),
   first: first.toString("base64"), last: last.toString("base64"),
 }));
 const file = await encryptBundle(password, plaintext);

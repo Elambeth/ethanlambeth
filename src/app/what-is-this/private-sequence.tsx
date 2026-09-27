@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { base64ToBytes, decryptBundle, DecryptError } from "@/lib/what-is-this-crypto.mjs";
 import styles from "./sequence.module.css";
 
-type Content = { text: string; firstAlt: string; lastAlt: string; firstUrl: string; lastUrl: string };
+type Content = { firstText: string; lastText: string; firstAlt: string; lastAlt: string; firstUrl: string; lastUrl: string };
 const BUNDLE_URL = "/what-is-this/content.bin";
 const STORAGE_KEY = "what-is-this.password";
 
@@ -34,14 +34,14 @@ export default function PrivateSequence() {
     } catch (cause) {
       throw cause instanceof DecryptError ? cause : new Error("This page is unavailable. Please try again shortly.");
     }
-    if (bundle?.v !== 1 || ![bundle.text, bundle.firstAlt, bundle.lastAlt].every(value => typeof value === "string" && value) ||
+    if (bundle?.v !== 2 || ![bundle.firstText, bundle.lastText, bundle.firstAlt, bundle.lastAlt].every(value => typeof value === "string" && value) ||
       typeof bundle.first !== "string" || typeof bundle.last !== "string" || !bundle.first || !bundle.last) {
       throw new Error("This page is unavailable. Please try again shortly.");
     }
     revokeUrls();
     urls.current = [bundle.first, bundle.last].map(bytes =>
       URL.createObjectURL(new Blob([base64ToBytes(bytes)], { type: "image/webp" })));
-    setContent({ text: bundle.text, firstAlt: bundle.firstAlt, lastAlt: bundle.lastAlt, firstUrl: urls.current[0], lastUrl: urls.current[1] });
+    setContent({ firstText: bundle.firstText, lastText: bundle.lastText, firstAlt: bundle.firstAlt, lastAlt: bundle.lastAlt, firstUrl: urls.current[0], lastUrl: urls.current[1] });
     setStep(0);
     setLeaving(false);
     sessionStorage.setItem(STORAGE_KEY, passphrase);
@@ -88,7 +88,7 @@ export default function PrivateSequence() {
   }
 
   function advance() {
-    if (leaving || step === 2) return;
+    if (leaving || step === 3) return;
     setLeaving(true);
     timer.current = setTimeout(() => {
       setStep((current) => current + 1);
@@ -126,10 +126,10 @@ export default function PrivateSequence() {
         <>
           <button className={styles.lock} onClick={lock}>Lock</button>
           <div className={styles.experience}>
-            <button className={styles.stage} onClick={advance} disabled={step === 2}
-              aria-label={step === 0 ? "Reveal the message" : step === 1 ? "Reveal the last image" : "Last image"}>
+            <button className={styles.stage} onClick={advance} disabled={step === 3}
+              aria-label={step === 0 ? "Reveal the message" : step === 1 ? "Reveal the last image" : step === 2 ? "Reveal the final message" : "Final message"}>
               <div key={step} className={`${styles.frame} ${leaving ? styles.leaving : styles.arriving}`}>
-                {step === 1 ? <p className={styles.message}>{content.text}</p> : (
+                {step === 1 || step === 3 ? <p className={styles.message}>{step === 1 ? content.firstText : content.lastText}</p> : (
                   // Private images stay in encrypted, object-URL form — never a public asset or optimizer.
                   // eslint-disable-next-line @next/next/no-img-element
                   <img className={styles.image} src={step === 0 ? content.firstUrl : content.lastUrl}
@@ -139,8 +139,8 @@ export default function PrivateSequence() {
               </div>
             </button>
             <div className={styles.footer}>
-              <p className={styles.hint} aria-live="polite">{step < 2 ? "Tap to continue" : ""}</p>
-              {step === 2 && <button className={styles.again} onClick={() => setStep(0)}>See it again</button>}
+              <p className={styles.hint} aria-live="polite">{step < 3 ? "Tap to continue" : ""}</p>
+              {step === 3 && <button className={styles.again} onClick={() => setStep(0)}>See it again</button>}
             </div>
             {error && <p className={styles.error} role="status">{error}</p>}
           </div>
