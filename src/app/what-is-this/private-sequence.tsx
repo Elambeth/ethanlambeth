@@ -5,10 +5,9 @@ import { base64ToBytes, decryptBundle, DecryptError } from "@/lib/what-is-this-c
 import styles from "./sequence.module.css";
 
 type Content = { firstText: string; lastText: string; firstAlt: string; lastAlt: string; firstUrl: string; lastUrl: string };
-const BUNDLE_URL = "/what-is-this/content.bin";
-const STORAGE_KEY = "what-is-this.password";
 
-export default function PrivateSequence() {
+// Each what-is-this page (what-is-this, what-is-this-2, …) reuses this component with its own bundle and session key.
+export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin", storageKey = "what-is-this.password" }: { bundleUrl?: string; storageKey?: string } = {}) {
   const [content, setContent] = useState<Content | null>(null);
   const [checking, setChecking] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -26,7 +25,7 @@ export default function PrivateSequence() {
 
   // The password gate is decryption: wrong passphrase fails the GCM auth check.
   async function tryUnlock(passphrase: string) {
-    const response = await fetch(BUNDLE_URL, { cache: "no-store" });
+    const response = await fetch(bundleUrl, { cache: "no-store" });
     if (!response.ok) throw new Error("This page is unavailable. Please try again shortly.");
     let bundle;
     try {
@@ -44,7 +43,7 @@ export default function PrivateSequence() {
     setContent({ firstText: bundle.firstText, lastText: bundle.lastText, firstAlt: bundle.firstAlt, lastAlt: bundle.lastAlt, firstUrl: urls.current[0], lastUrl: urls.current[1] });
     setStep(0);
     setLeaving(false);
-    sessionStorage.setItem(STORAGE_KEY, passphrase);
+    sessionStorage.setItem(storageKey, passphrase);
   }
 
   // Refocus the gate input after a failed attempt — once busy clears and it re-enables.
@@ -54,13 +53,13 @@ export default function PrivateSequence() {
 
   useEffect(() => {
     let cancelled = false;
-    const saved = sessionStorage.getItem(STORAGE_KEY);
+    const saved = sessionStorage.getItem(storageKey);
     if (!saved) {
       setChecking(false);
     } else {
       tryUnlock(saved)
         .catch((cause: Error) => {
-          if (cause instanceof DecryptError) sessionStorage.removeItem(STORAGE_KEY);
+          if (cause instanceof DecryptError) sessionStorage.removeItem(storageKey);
           else if (!cancelled) setError(cause.message);
         })
         .finally(() => { if (!cancelled) setChecking(false); });
@@ -103,7 +102,7 @@ export default function PrivateSequence() {
     setError("");
     setStep(0);
     setLeaving(false);
-    sessionStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(storageKey);
     password.current?.focus();
   }
 

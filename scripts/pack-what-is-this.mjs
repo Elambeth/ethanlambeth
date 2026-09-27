@@ -1,4 +1,4 @@
-// Packs private/what-is-this/ into an encrypted public/what-is-this/content.bin.
+// Packs private/what-is-this[-N]/ into an encrypted public/what-is-this[-N]/content.bin.
 // The passphrase comes from WHAT_IS_THIS_PASSWORD or a masked prompt (never argv).
 // Only the ciphertext is committed; the private directory stays gitignored.
 import { cp, mkdir, readFile, stat, writeFile } from "node:fs/promises";
@@ -7,9 +7,10 @@ import { Writable } from "node:stream";
 import sharp from "sharp";
 import { encryptBundle } from "../src/lib/what-is-this-crypto.mjs";
 
-const root = "private/what-is-this";
+const slug = process.env.WHAT_IS_THIS_SLUG ?? "what-is-this";
+const root = `private/${slug}`;
 const example = "private/what-is-this.example";
-const destination = "public/what-is-this/content.bin";
+const destination = `public/${slug}/content.bin`;
 const namePattern = /^[a-zA-Z0-9_-]+\.(png|jpe?g|webp|svg)$/i;
 const fail = (message) => { console.error(`Error: ${message}`); process.exit(1); };
 
@@ -82,7 +83,7 @@ const plaintext = new TextEncoder().encode(JSON.stringify({
 const file = await encryptBundle(password, plaintext);
 if (file.byteLength > 8 * 1024 * 1024) console.warn("Warning: the packed file exceeds 8 MB. Consider smaller images.");
 
-await mkdir("public/what-is-this", { recursive: true });
+await mkdir(`public/${slug}`, { recursive: true });
 await writeFile(destination, file);
 console.log(`Packed ${destination} (${(file.byteLength / 1024).toFixed(0)} KB; images ${(first.byteLength / 1024).toFixed(0)} KB + ${(last.byteLength / 1024).toFixed(0)} KB).`);
 console.log("Commit it to publish. The passphrase was not printed or stored.");
