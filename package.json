@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pack:what-is-this": "node scripts/pack-what-is-this.mjs"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",
@@ -22,7 +23,7 @@
     "geist": "^1.7.2",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.395.0",
-    "next": "14.2.4",
+    "next": "15.5.26",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
@@ -38,11 +39,12 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
+    "sharp": "0.35.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4",
+    "eslint-config-next": "15.5.26",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
