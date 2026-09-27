@@ -17,6 +17,8 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
+  if (pathname === "/what-is-this" || pathname.startsWith("/what-is-this/")) return null;
+
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-md">
       <nav
