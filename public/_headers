@@ -4,3 +4,6 @@
 /what-is-this-2/content.bin
   Cache-Control: no-cache
   X-Robots-Tag: noindex, nofollow
+/what-is-this-3/content.bin
+  Cache-Control: no-cache
+  X-Robots-Tag: noindex, nofollow

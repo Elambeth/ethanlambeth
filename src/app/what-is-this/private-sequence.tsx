@@ -4,11 +4,15 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { base64ToBytes, decryptBundle, DecryptError } from "@/lib/what-is-this-crypto.mjs";
 import styles from "./sequence.module.css";
 
-type Content = { firstText: string; lastText: string; firstAlt: string; lastAlt: string; firstUrl: string; lastUrl: string };
+// The decrypted experience is an alternating sequence: image, message, image, message, …
+// v2 bundles (first/last image + firstText/lastText) normalize into the same shape.
+type ImageItem = { kind: "image"; url: string; alt: string };
+type TextItem = { kind: "text"; text: string };
+type Item = ImageItem | TextItem;
 
 // Each what-is-this page (what-is-this, what-is-this-2, …) reuses this component with its own bundle and session key.
 export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin", storageKey = "what-is-this.password" }: { bundleUrl?: string; storageKey?: string } = {}) {
-  const [content, setContent] = useState<Content | null>(null);
+  const [items, setItems] = useState<Item[] | null>(null);
   const [checking, setChecking] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -23,6 +27,43 @@ export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin
     urls.current = [];
   }
 
+  // Turns a decrypted v2 or v3 bundle into renderable items; null means the bundle is unusable.
+  function bundleToItems(bundle: Record<string, unknown>): Item[] | null {
+    const text = (value: unknown) => typeof value === "string" && value.trim() ? value : null;
+    if (bundle?.v === 2) {
+      const firstText = text(bundle.firstText), lastText = text(bundle.lastText);
+      const firstAlt = text(bundle.firstAlt), lastAlt = text(bundle.lastAlt);
+      if (!firstText || !lastText || !firstAlt || !lastAlt ||
+        typeof bundle.first !== "string" || !bundle.first || typeof bundle.last !== "string" || !bundle.last) return null;
+      return [
+        { kind: "image", url: URL.createObjectURL(new Blob([base64ToBytes(bundle.first)], { type: "image/webp" })), alt: firstAlt },
+        { kind: "text", text: firstText },
+        { kind: "image", url: URL.createObjectURL(new Blob([base64ToBytes(bundle.last)], { type: "image/webp" })), alt: lastAlt },
+        { kind: "text", text: lastText },
+      ];
+    }
+    if (bundle?.v === 3 && Array.isArray(bundle.sequence)) {
+      // Validate every entry before creating any object URL, so a bad bundle leaks nothing.
+      const entries: ({ kind: "text"; text: string } | { kind: "image"; webp: string; alt: string })[] = [];
+      for (const entry of bundle.sequence) {
+        if (!entry || typeof entry !== "object") return null;
+        if (entry.kind === "text") {
+          const message = text(entry.text);
+          if (!message) return null;
+          entries.push({ kind: "text", text: message });
+        } else if (entry.kind === "image") {
+          const alt = text(entry.alt);
+          if (!alt || typeof entry.webp !== "string" || !entry.webp) return null;
+          entries.push({ kind: "image", webp: entry.webp, alt });
+        } else return null;
+      }
+      if (entries.length < 2) return null;
+      return entries.map((entry) => entry.kind === "text" ? entry
+        : { kind: "image", url: URL.createObjectURL(new Blob([base64ToBytes(entry.webp)], { type: "image/webp" })), alt: entry.alt });
+    }
+    return null;
+  }
+
   // The password gate is decryption: wrong passphrase fails the GCM auth check.
   async function tryUnlock(passphrase: string) {
     const response = await fetch(bundleUrl, { cache: "no-store" });
@@ -33,14 +74,11 @@ export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin
     } catch (cause) {
       throw cause instanceof DecryptError ? cause : new Error("This page is unavailable. Please try again shortly.");
     }
-    if (bundle?.v !== 2 || ![bundle.firstText, bundle.lastText, bundle.firstAlt, bundle.lastAlt].every(value => typeof value === "string" && value) ||
-      typeof bundle.first !== "string" || typeof bundle.last !== "string" || !bundle.first || !bundle.last) {
-      throw new Error("This page is unavailable. Please try again shortly.");
-    }
+    const built = bundleToItems(bundle);
+    if (!built) throw new Error("This page is unavailable. Please try again shortly.");
     revokeUrls();
-    urls.current = [bundle.first, bundle.last].map(bytes =>
-      URL.createObjectURL(new Blob([base64ToBytes(bytes)], { type: "image/webp" })));
-    setContent({ firstText: bundle.firstText, lastText: bundle.lastText, firstAlt: bundle.firstAlt, lastAlt: bundle.lastAlt, firstUrl: urls.current[0], lastUrl: urls.current[1] });
+    urls.current = built.filter((item): item is ImageItem => item.kind === "image").map((item) => item.url);
+    setItems(built);
     setStep(0);
     setLeaving(false);
     sessionStorage.setItem(storageKey, passphrase);
@@ -48,8 +86,8 @@ export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin
 
   // Refocus the gate input after a failed attempt — once busy clears and it re-enables.
   useEffect(() => {
-    if (error && !busy && !content) password.current?.focus();
-  }, [error, busy, content]);
+    if (error && !busy && !items) password.current?.focus();
+  }, [error, busy, items]);
 
   useEffect(() => {
     let cancelled = false;
@@ -87,7 +125,7 @@ export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin
   }
 
   function advance() {
-    if (leaving || step === 3) return;
+    if (leaving || !items || step === items.length - 1) return;
     setLeaving(true);
     timer.current = setTimeout(() => {
       setStep((current) => current + 1);
@@ -98,7 +136,7 @@ export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin
   function lock() {
     clearTimeout(timer.current);
     revokeUrls();
-    setContent(null);
+    setItems(null);
     setError("");
     setStep(0);
     setLeaving(false);
@@ -108,7 +146,7 @@ export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin
 
   return (
     <main className={styles.page}>
-      {checking ? <p className={styles.hint} role="status">One moment…</p> : !content ? (
+      {checking ? <p className={styles.hint} role="status">One moment…</p> : !items ? (
         <form className={styles.gate} onSubmit={unlock}>
           <h1>What is this?</h1>
           <label htmlFor="private-password">Enter the password to see.</label>
@@ -125,21 +163,23 @@ export default function PrivateSequence({ bundleUrl = "/what-is-this/content.bin
         <>
           <button className={styles.lock} onClick={lock}>Lock</button>
           <div className={styles.experience}>
-            <button className={styles.stage} onClick={advance} disabled={step === 3}
-              aria-label={step === 0 ? "Reveal the message" : step === 1 ? "Reveal the last image" : step === 2 ? "Reveal the final message" : "Final message"}>
+            <button className={styles.stage} onClick={advance} disabled={step === items.length - 1}
+              aria-label={step === items.length - 1 ? "Final message" : items[step].kind === "image" ? "Reveal the message" : "Reveal the next image"}>
               <div key={step} className={`${styles.frame} ${leaving ? styles.leaving : styles.arriving}`}>
-                {step === 1 || step === 3 ? <p className={styles.message}>{step === 1 ? content.firstText : content.lastText}</p> : (
-                  // Private images stay in encrypted, object-URL form — never a public asset or optimizer.
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className={styles.image} src={step === 0 ? content.firstUrl : content.lastUrl}
-                    alt={step === 0 ? content.firstAlt : content.lastAlt} draggable={false}
-                    onError={() => setError("The image could not be displayed.")} />
-                )}
+                {(() => {
+                  const current = items[step];
+                  return current.kind === "text" ? <p className={styles.message}>{current.text}</p> : (
+                    // Private images stay in encrypted, object-URL form — never a public asset or optimizer.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className={styles.image} src={current.url} alt={current.alt} draggable={false}
+                      onError={() => setError("The image could not be displayed.")} />
+                  );
+                })()}
               </div>
             </button>
             <div className={styles.footer}>
-              <p className={styles.hint} aria-live="polite">{step < 3 ? "Tap to continue" : ""}</p>
-              {step === 3 && <button className={styles.again} onClick={() => setStep(0)}>See it again</button>}
+              <p className={styles.hint} aria-live="polite">{step < items.length - 1 ? "Tap to continue" : ""}</p>
+              {step === items.length - 1 && <button className={styles.again} onClick={() => setStep(0)}>See it again</button>}
             </div>
             {error && <p className={styles.error} role="status">{error}</p>}
           </div>

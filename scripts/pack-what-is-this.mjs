@@ -25,14 +25,41 @@ try {
 } catch {
   fail(`${root}/content.json is missing or not valid JSON.`);
 }
-const { firstText, lastText, firstAlt, lastAlt, firstImage, lastImage } = data ?? {};
-const textProblem = [firstText, lastText, firstAlt, lastAlt].some((value, index) => {
-  const limit = [1200, 1200, 240, 240][index];
-  return typeof value !== "string" || !value.trim() || value.length > limit;
-}) ? "both messages (1–1200 characters) and both image descriptions (1–240 characters)" : null;
-if (textProblem || typeof firstImage !== "string" || typeof lastImage !== "string" ||
-  !namePattern.test(firstImage) || !namePattern.test(lastImage)) {
-  fail(`content.json needs ${textProblem || "valid image fields"} and image filenames like first.webp.`);
+
+// A content.json with a "sequence" array packs the v3 format — any number of rounds,
+// each {"image", "alt"} or {"text"}, in order. Without one it's the v2 flat format
+// (two images, firstText/lastText), which still packs unchanged for the original pages.
+const sequence = Array.isArray(data?.sequence) ? data.sequence : null;
+const entries = []; // {text} or {image, alt}
+if (sequence) {
+  if (sequence.length < 2 || sequence.length > 12) fail("sequence needs 2 to 12 entries.");
+  for (const entry of sequence) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) fail(`Each sequence entry must be {"image", "alt"} or {"text"}.`);
+    if (Object.hasOwn(entry, "text")) {
+      const text = typeof entry.text === "string" ? entry.text.trim() : "";
+      if (!text || text.length > 1200) fail("Every text needs 1–1200 characters.");
+      entries.push({ text });
+    } else {
+      const alt = typeof entry.alt === "string" ? entry.alt.trim() : "";
+      if (typeof entry.image !== "string" || !namePattern.test(entry.image)) fail("Every image entry needs an image filename like 1.webp.");
+      if (!alt || alt.length > 240) fail("Every image entry needs alt text (1–240 characters).");
+      entries.push({ image: entry.image, alt });
+    }
+  }
+} else {
+  const { firstText, lastText, firstAlt, lastAlt, firstImage, lastImage } = data ?? {};
+  const textProblem = [firstText, lastText, firstAlt, lastAlt].some((value, index) => {
+    const limit = [1200, 1200, 240, 240][index];
+    return typeof value !== "string" || !value.trim() || value.length > limit;
+  }) ? "both messages (1–1200 characters) and both image descriptions (1–240 characters)" : null;
+  if (textProblem || typeof firstImage !== "string" || typeof lastImage !== "string" ||
+    !namePattern.test(firstImage) || !namePattern.test(lastImage)) {
+    fail(`content.json needs ${textProblem || "valid image fields"} and image filenames like first.webp.`);
+  }
+  entries.push(
+    { image: firstImage, alt: firstAlt.trim() }, { text: firstText.trim() },
+    { image: lastImage, alt: lastAlt.trim() }, { text: lastText.trim() },
+  );
 }
 
 async function encodeImage(file) {
@@ -50,11 +77,13 @@ async function encodeImage(file) {
   }
 }
 
-// Validate and encode both images before writing anything.
-const first = await encodeImage(firstImage);
-const last = await encodeImage(lastImage);
-if (first.byteLength > 4 * 1024 * 1024 || last.byteLength > 4 * 1024 * 1024) {
-  fail("An encoded image exceeds 4 MB. Start with smaller images.");
+// Validate and encode every image before writing anything.
+const images = new Map(); // filename -> webp buffer
+for (const entry of entries) {
+  if (entry.image && !images.has(entry.image)) images.set(entry.image, await encodeImage(entry.image));
+}
+for (const [file, buffer] of images) {
+  if (buffer.byteLength > 4 * 1024 * 1024) fail(`${file} exceeds 4 MB once encoded. Start with smaller images.`);
 }
 
 let password = process.env.WHAT_IS_THIS_PASSWORD;
@@ -76,14 +105,18 @@ if (password.length < 16) {
   console.warn("Warning: short passphrases can be guessed offline from the public ciphertext. Use at least four random words.");
 }
 
-const plaintext = new TextEncoder().encode(JSON.stringify({
-  v: 2, firstText: firstText.trim(), lastText: lastText.trim(), firstAlt: firstAlt.trim(), lastAlt: lastAlt.trim(),
-  first: first.toString("base64"), last: last.toString("base64"),
-}));
+const bundle = sequence
+  ? { v: 3, sequence: entries.map((entry) => entry.text !== undefined
+      ? { kind: "text", text: entry.text }
+      : { kind: "image", alt: entry.alt, webp: images.get(entry.image).toString("base64") }) }
+  : { v: 2, firstText: entries[1].text, lastText: entries[3].text, firstAlt: entries[0].alt, lastAlt: entries[2].alt,
+      first: images.get(entries[0].image).toString("base64"), last: images.get(entries[2].image).toString("base64") };
+const plaintext = new TextEncoder().encode(JSON.stringify(bundle));
 const file = await encryptBundle(password, plaintext);
 if (file.byteLength > 8 * 1024 * 1024) console.warn("Warning: the packed file exceeds 8 MB. Consider smaller images.");
 
 await mkdir(`public/${slug}`, { recursive: true });
 await writeFile(destination, file);
-console.log(`Packed ${destination} (${(file.byteLength / 1024).toFixed(0)} KB; images ${(first.byteLength / 1024).toFixed(0)} KB + ${(last.byteLength / 1024).toFixed(0)} KB).`);
+const sizes = [...images.values()].map((buffer) => `${(buffer.byteLength / 1024).toFixed(0)} KB`);
+console.log(`Packed ${destination} (${(file.byteLength / 1024).toFixed(0)} KB; images ${sizes.join(" + ")}).`);
 console.log("Commit it to publish. The passphrase was not printed or stored.");
