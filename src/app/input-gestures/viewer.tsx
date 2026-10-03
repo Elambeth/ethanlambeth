@@ -1,7 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LayoutGrid, Rows3 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 type Image = {
@@ -13,8 +18,15 @@ type Image = {
 
 const STORAGE_KEY = "input-gestures.view";
 
-export default function Viewer({ images }: { images: Image[] }) {
+export default function Viewer({
+  images,
+  notes,
+}: {
+  images: Image[];
+  notes: Record<string, string>;
+}) {
   const [list, setList] = useState(false);
+  const [active, setActive] = useState<number | null>(null);
 
   useEffect(() => {
     try {
@@ -27,6 +39,63 @@ export default function Viewer({ images }: { images: Image[] }) {
     try {
       localStorage.setItem(STORAGE_KEY, next ? "list" : "grid");
     } catch {}
+  }
+
+  const close = useCallback(() => setActive(null), []);
+
+  useEffect(() => {
+    if (active === null) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [active, close]);
+
+  const activeImage = active !== null ? images[active] : null;
+
+  function frame(img: Image, i: number, className?: string) {
+    const note = notes[img.name];
+    const inner = (
+      <button
+        key={img.name}
+        type="button"
+        onClick={() => setActive(i)}
+        aria-label={note ? `Expand image. ${note}` : "Expand image"}
+        className={cn(
+          "group relative block w-full cursor-zoom-in overflow-hidden rounded-lg break-inside-avoid",
+          className
+        )}
+      >
+        <img
+          src={img.src}
+          width={img.width}
+          height={img.height}
+          loading={i < 6 ? "eager" : "lazy"}
+          decoding="async"
+          className="h-auto w-full"
+          alt={note ?? ""}
+        />
+        {note && (
+          <span
+            aria-hidden
+            className="absolute right-2 top-2 size-2 rounded-full bg-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.25)]"
+          />
+        )}
+      </button>
+    );
+    return note ? (
+      <Tooltip key={img.name}>
+        <TooltipTrigger asChild>{inner}</TooltipTrigger>
+        <TooltipContent side="top" className="max-w-64 text-center">
+          {note}
+        </TooltipContent>
+      </Tooltip>
+    ) : (
+      inner
+    );
   }
 
   return (
@@ -65,33 +134,40 @@ export default function Viewer({ images }: { images: Image[] }) {
 
       {list ? (
         <div className="mx-auto flex max-w-2xl flex-col gap-16 px-6 pb-24">
-          {images.map((img, i) => (
-            <img
-              key={img.name}
-              src={img.src}
-              width={img.width}
-              height={img.height}
-              loading={i < 2 ? "eager" : "lazy"}
-              decoding="async"
-              className="h-auto w-full rounded-lg"
-              alt=""
-            />
-          ))}
+          {images.map((img, i) => frame(img, i))}
         </div>
       ) : (
         <div className="mx-auto max-w-7xl columns-2 gap-4 px-6 pb-24 [column-fill:_balance] sm:columns-3 lg:columns-4 xl:columns-5">
-          {images.map((img, i) => (
+          {images.map((img, i) => frame(img, i))}
+        </div>
+      )}
+
+      {activeImage && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Expanded image"
+          onClick={close}
+          className="fixed inset-0 z-[60] flex cursor-zoom-out items-center justify-center bg-black/85 p-6 sm:p-10"
+        >
+          <div
+            className="flex max-h-full max-w-full flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              key={img.name}
-              src={img.src}
-              width={img.width}
-              height={img.height}
-              loading={i < 6 ? "eager" : "lazy"}
-              decoding="async"
-              className="mb-4 h-auto w-full break-inside-avoid rounded-lg"
-              alt=""
+              src={activeImage.src}
+              width={activeImage.width}
+              height={activeImage.height}
+              className="max-h-[85vh] w-auto max-w-full rounded-lg object-contain sm:max-w-[min(70vw,100%)]"
+              alt={notes[activeImage.name] ?? ""}
             />
-          ))}
+            {notes[activeImage.name] && (
+              <p className="max-w-64 shrink-0 text-sm leading-relaxed text-white/80 sm:text-inherit">
+                {notes[activeImage.name]}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </>
