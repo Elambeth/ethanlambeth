@@ -76,7 +76,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--f-body); fon
 
 .rail-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .rail-btn { padding: 2px 9px; font-size: 16px; line-height: 1.2; }
-.rail-open { position: fixed; left: 16px; top: calc(16px + env(safe-area-inset-top, 0px)); z-index: 40; background: var(--panel); box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+.rail-open { position: fixed; left: 16px; top: calc(16px + env(safe-area-inset-top, 0px)); z-index: 40; background: var(--panel); }
 .shell.collapsed { grid-template-columns: minmax(0, 1fr); max-width: 1180px; }
 .shell.collapsed .rail { display: none; }
 @media (max-width: 1080px) { .rail-btn, .rail-open { display: none !important; } .shell.collapsed .rail { display: block; } }
