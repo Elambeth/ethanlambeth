@@ -73,11 +73,18 @@ body { background: var(--bg); color: var(--ink); font-family: var(--f-body); fon
 .rail a span:first-child { font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-3); padding-top: 2px; }
 .rail a:hover { background: var(--panel-2); color: var(--ink); }
 .rail a.on { background: var(--panel); color: var(--ink); box-shadow: inset 2px 0 0 var(--accent); }
+
+.rail-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.rail-btn { padding: 2px 9px; font-size: 16px; line-height: 1.2; }
+.rail-open { position: fixed; left: 16px; top: calc(16px + env(safe-area-inset-top, 0px)); z-index: 40; background: var(--panel); box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+.shell.collapsed { grid-template-columns: minmax(0, 1fr); max-width: 1180px; }
+.shell.collapsed .rail { display: none; }
+@media (max-width: 1080px) { .rail-btn, .rail-open { display: none !important; } .shell.collapsed .rail { display: block; } }
 .rail .legend { margin-top: 24px; font-family: var(--f-display); font-size: 13px; color: var(--ink-3); display: grid; gap: 6px; }
 .rail .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 8px; vertical-align: -1px; }
 @media (max-width: 1080px) {
   .rail { position: sticky; top: env(safe-area-inset-top, 0px); height: auto; z-index: 20; background: var(--bg); padding-block: 8px; border-bottom: 1px solid var(--rule); overflow-x: auto; overflow-y: hidden; margin-inline: -16px; padding-inline: 16px; }
-  .rail .brand, .rail .legend { display: none; }
+  .rail .brand, .rail .legend, .rail-top { display: none; }
   .rail ol { flex-direction: row; margin: 0; gap: 4px; }
   .rail a { grid-template-columns: auto auto; white-space: nowrap; font-size: 14px; padding: 6px 10px; }
 }
@@ -232,16 +239,11 @@ details summary { cursor: pointer; font-family: var(--f-display); font-weight: 6
 <body>
 
 
-<div class="shell">
+<div class="shell" id="shell">
+<button class="rail-open" id="rail-show" type="button" aria-label="Show chapter panel" hidden>» Chapters</button>
 <nav class="rail" aria-label="Chapters">
-  <div class="brand">Swarm vs. Swarm<small>Trident Report 506 · USNA 2021</small></div>
+  <div class="rail-top"><div class="brand">Swarm vs. Swarm<small>Trident Report 506 · USNA 2021</small></div><button class="rail-btn" id="rail-hide" type="button" aria-label="Collapse chapter panel" title="Collapse panel">«</button></div>
   <ol id="toc"></ol>
-  <div class="legend">
-    <div><i style="background:var(--friend)"></i>Friendly / defense</div>
-    <div><i style="background:var(--foe)"></i>Enemy / offense</div>
-    <div><i style="background:var(--ship)"></i>Destroyer</div>
-    <div><i style="background:var(--amber)"></i>RL agent</div>
-  </div>
 </nav>
 <main id="main">
 <!-- ================= HERO ================= -->
@@ -3492,7 +3494,16 @@ function initThemeToggle() {
   b.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; try { localStorage.setItem('drone-theme', root.dataset.theme); } catch (e) {} label(); });
   label(); THEME_LISTENERS.push(label);
 }
+function initRailToggle() {
+  const shell = $('#shell'), show = $('#rail-show');
+  const set = c => { shell.classList.toggle('collapsed', c); show.hidden = !c; try { localStorage.setItem('drone-rail', c ? '1' : '0'); } catch (e) {} };
+  $('#rail-hide').addEventListener('click', () => set(true));
+  show.addEventListener('click', () => set(false));
+  let saved = false; try { saved = localStorage.getItem('drone-rail') === '1'; } catch (e) {}
+  set(saved);
+}
 function boot() {
+  initRailToggle();
   try { const t = localStorage.getItem('drone-theme'); if (t) document.documentElement.dataset.theme = t; else if (window.DEFAULT_THEME) document.documentElement.dataset.theme = window.DEFAULT_THEME; } catch (e) { if (window.DEFAULT_THEME) document.documentElement.dataset.theme = window.DEFAULT_THEME; }
   initThemeToggle();
   readTheme(); loadPretrained();
