@@ -17,6 +17,8 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
+  const inWriting = ["/blog", "/topics", "/wiki"].some((p) => pathname.startsWith(p));
+
   if (pathname === "/what-is-this" || pathname.startsWith("/what-is-this/")) return null;
 
   return (
@@ -37,10 +39,10 @@ export default function Navbar() {
         <div className="flex items-center gap-1">
           <Link
             href="/blog"
-            aria-current={pathname.startsWith("/blog") ? "page" : undefined}
+            aria-current={inWriting ? "page" : undefined}
             className={cn(
               "rounded-md px-3 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
-              pathname.startsWith("/blog")
+              inWriting
                 ? "font-medium text-foreground"
                 : "text-muted-foreground hover:text-foreground"
             )}

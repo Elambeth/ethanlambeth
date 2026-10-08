@@ -1,4 +1,6 @@
 import { getBlogPosts, getBlogStream } from "@/data/blog";
+import { getTopics } from "@/data/wiki";
+import EntryList from "@/components/entry-list";
 import Link from "next/link";
 
 export const metadata = {
@@ -7,7 +9,11 @@ export const metadata = {
 };
 
 export default async function BlogPage() {
-  const [posts, stream] = await Promise.all([getBlogPosts(), getBlogStream()]);
+  const [posts, stream, topics] = await Promise.all([
+    getBlogPosts(),
+    getBlogStream(),
+    getTopics(),
+  ]);
   const sortedPosts = posts.sort(
     (a, b) =>
       new Date(b.metadata.publishedAt).getTime() -
@@ -19,6 +25,17 @@ export default async function BlogPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-16 sm:px-6 sm:pt-20">
+      {topics.length > 0 && (
+        <section className="mb-20 max-w-2xl" aria-labelledby="topics-heading">
+          <h2 id="topics-heading" className="border-b border-border pb-3 text-sm font-medium">
+            Topics
+          </h2>
+          <EntryList
+            entries={topics.map((t) => ({ href: `/topics/${t.slug}`, title: t.title, summary: t.summary }))}
+          />
+        </section>
+      )}
+
       <section className="max-w-2xl" aria-labelledby="essays-heading">
         <h2 id="essays-heading" className="border-b border-border pb-3 text-sm font-medium">
           Essays

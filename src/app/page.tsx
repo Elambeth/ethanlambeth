@@ -1,12 +1,17 @@
+import Link from "next/link";
+
 const beliefs = [
   'Voice is not "the next interface".',
   "AI safety an extremely important problem",
 ];
 
-const ideas = [
-  "What conflict between large swarms of agents could look like.",
-  "Interfaces, broadly.",
-  "What an AR world would look like. What are the social norms that will form and dissapear (Arguably also an interface question)",
+const ideas: { text: string; href?: string }[] = [
+  { text: "What conflict between large swarms of agents could look like." },
+  { text: "Interfaces, broadly.", href: "/topics/interfaces" },
+  {
+    text: "What an AR world would look like. What are the social norms that will form and dissapear (Arguably also an interface question)",
+    href: "/topics/ar",
+  },
 ];
 
 export default function Page() {
@@ -49,7 +54,15 @@ export default function Page() {
         </h2>
         <ul className="mt-5 list-disc space-y-2.5 pl-5 text-[0.95rem] leading-7 marker:text-muted-foreground">
           {ideas.map((idea) => (
-            <li key={idea}>{idea}</li>
+            <li key={idea.text}>
+              {idea.href ? (
+                <Link href={idea.href} className="link-underline">
+                  {idea.text}
+                </Link>
+              ) : (
+                idea.text
+              )}
+            </li>
           ))}
         </ul>
       </section>
