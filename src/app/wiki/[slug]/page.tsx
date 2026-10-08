@@ -65,7 +65,7 @@ export default async function WikiPage({
         />
 
         {backlinks.length > 0 && (
-          <section className="mt-16 rounded-lg bg-muted/50 px-5 pt-4 [&_a:last-child]:border-b-0" aria-labelledby="backlinks-heading">
+          <section className="mt-16 rounded-lg bg-zinc-100 px-5 dark:bg-zinc-900 pt-4 [&_a:last-child]:border-b-0" aria-labelledby="backlinks-heading">
             <h2 id="backlinks-heading" className="border-b border-border pb-3 text-sm font-medium">
               Linked from
             </h2>
