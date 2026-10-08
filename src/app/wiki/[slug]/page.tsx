@@ -40,23 +40,25 @@ export default async function WikiPage({
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-12 sm:px-6 sm:pt-16">
       <div className="max-w-2xl">
-        <nav aria-label="Topics" className="flex gap-3 text-sm text-muted-foreground">
-          {topics.map((topic) => (
-            <Link
-              key={topic.slug}
-              href={`/topics/${topic.slug}`}
-              className="link-underline rounded-sm outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {topic.title}
-            </Link>
-          ))}
-        </nav>
-        <header className="mb-12 mt-8">
+        <header className="mb-12">
           <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
             {page.title}
           </h1>
+          {topics.length > 0 && (
+            <nav aria-label="Topics" className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-sm text-muted-foreground">
+              {topics.map((topic) => (
+                <Link
+                  key={topic.slug}
+                  href={`/topics/${topic.slug}`}
+                  className="link-underline rounded-sm outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {topic.title}
+                </Link>
+              ))}
+            </nav>
+          )}
           {page.summary && (
-            <p className="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">{page.summary}</p>
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">{page.summary}</p>
           )}
         </header>
         <article
