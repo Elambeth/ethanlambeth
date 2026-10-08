@@ -45,7 +45,7 @@ export default async function WikiPage({
             <Link
               key={topic.slug}
               href={`/topics/${topic.slug}`}
-              className="rounded-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              className="link-underline rounded-sm outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
             >
               {topic.title}
             </Link>
@@ -65,7 +65,7 @@ export default async function WikiPage({
         />
 
         {backlinks.length > 0 && (
-          <section className="mt-16" aria-labelledby="backlinks-heading">
+          <section className="mt-16 rounded-lg bg-muted/50 px-5 pt-4 [&_a:last-child]:border-b-0" aria-labelledby="backlinks-heading">
             <h2 id="backlinks-heading" className="border-b border-border pb-3 text-sm font-medium">
               Linked from
             </h2>
@@ -79,7 +79,7 @@ export default async function WikiPage({
           <footer className="mt-16 border-t border-border pt-6 text-sm">
             <Link
               href={`/wiki/${next.slug}`}
-              className="rounded-sm font-medium outline-none hover:underline hover:underline-offset-4 focus-visible:ring-2 focus-visible:ring-ring"
+              className="link-underline rounded-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Next: {next.title}
             </Link>

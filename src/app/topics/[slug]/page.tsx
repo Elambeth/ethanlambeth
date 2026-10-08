@@ -42,7 +42,7 @@ export default async function TopicPage({
       <div className="max-w-2xl">
         <Link
           href="/blog"
-          className="rounded-sm text-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          className="link-underline rounded-sm text-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
         >
           All writing
         </Link>

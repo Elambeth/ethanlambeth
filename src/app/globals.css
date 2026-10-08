@@ -139,7 +139,7 @@
   }
   
   .prose a {
-    @apply text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground;
+    @apply text-foreground underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground;
   }
   
   .prose blockquote {
@@ -174,7 +174,7 @@
 
   .note-prose a,
   .link-underline {
-    @apply underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground;
+    @apply underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground;
   }
 }
 
