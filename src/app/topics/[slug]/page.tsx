@@ -28,14 +28,16 @@ export default async function TopicPage({
   const topic = await getTopic(slug);
   if (!topic) notFound();
 
-  // Curated order first, then anything else tagged with this topic.
-  const tagged = (await getWikiPages()).filter((p) => p.topics.includes(slug));
+  // Wiki pages and posts are one list: curated order first, then anything else tagged with this topic.
+  const wiki = (await getWikiPages())
+    .filter((p) => p.topics.includes(slug))
+    .map((p) => ({ slug: p.slug, href: `/wiki/${p.slug}`, title: p.title, summary: p.summary }));
+  const posts = getTopicPosts(slug).map((p) => ({ ...p, href: `/blog/${p.slug}` }));
   const rank = (s: string) => {
     const i = topic.pages.indexOf(s);
     return i === -1 ? Infinity : i;
   };
-  const pages = tagged.sort((a, b) => rank(a.slug) - rank(b.slug));
-  const posts = getTopicPosts(slug);
+  const entries = [...wiki, ...posts].sort((a, b) => rank(a.slug) - rank(b.slug));
 
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-12 sm:px-6 sm:pt-16">
@@ -61,20 +63,9 @@ export default async function TopicPage({
             Notes
           </h2>
           <EntryList
-            entries={pages.map((p) => ({ href: `/wiki/${p.slug}`, title: p.title, summary: p.summary }))}
+            entries={entries.map(({ href, title, summary }) => ({ href, title, summary }))}
           />
         </section>
-
-        {posts.length > 0 && (
-          <section className="mt-16" aria-labelledby="posts-heading">
-            <h2 id="posts-heading" className="border-b border-border pb-3 text-sm font-medium">
-              Essays
-            </h2>
-            <EntryList
-              entries={posts.map((p) => ({ href: `/blog/${p.slug}`, title: p.title, summary: p.summary }))}
-            />
-          </section>
-        )}
       </div>
     </main>
   );
