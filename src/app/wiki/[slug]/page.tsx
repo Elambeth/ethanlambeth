@@ -40,7 +40,7 @@ export default async function WikiPage({
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-12 sm:px-6 sm:pt-16">
       <div className="max-w-2xl">
-        <header className="mb-12">
+        <header className="mb-6 border-b border-border pb-6">
           <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
             {page.title}
           </h1>
