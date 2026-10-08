@@ -1,5 +1,5 @@
 ---
-title: "AR"
+title: "Augmented Reality"
 summary: "What an AR world would look like, and the social norms that form."
 pages:
   - adding-and-removing
