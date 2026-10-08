@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { LayoutGrid, Rows3 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { LayoutGrid, Rows3, X } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -27,6 +27,7 @@ export default function Viewer({
 }) {
   const [list, setList] = useState(false);
   const [active, setActive] = useState<number | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     try {
@@ -41,16 +42,27 @@ export default function Viewer({
     } catch {}
   }
 
-  const close = useCallback(() => setActive(null), []);
+  const close = useCallback(() => {
+    dialogRef.current?.close();
+    setActive(null);
+  }, []);
 
   useEffect(() => {
     if (active === null) return;
+    const previousOverflow = document.body.style.overflow;
+    dialogRef.current?.showModal();
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
-    window.addEventListener("keydown", onKey);
+    // Handle Escape before a thumbnail tooltip can consume it.
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+      }
+    };
+    window.addEventListener("keydown", onKey, true);
     return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKey, true);
     };
   }, [active, close]);
 
@@ -138,37 +150,51 @@ export default function Viewer({
         </div>
       ) : (
         <div className="mx-auto max-w-7xl columns-2 gap-4 px-6 pb-24 [column-fill:_balance] sm:columns-3 lg:columns-4 xl:columns-5">
-          {images.map((img, i) => frame(img, i))}
+          {images.map((img, i) => frame(img, i, "mb-4"))}
         </div>
       )}
 
       {activeImage && (
-        <div
-          role="dialog"
+        <dialog
+          ref={dialogRef}
           aria-modal="true"
           aria-label="Expanded image"
+          aria-describedby={notes[activeImage.name] ? "image-annotation" : undefined}
+          onCancel={(event) => {
+            event.preventDefault();
+            close();
+          }}
           onClick={close}
-          className="fixed inset-0 z-[60] flex cursor-zoom-out items-center justify-center bg-black/85 p-6 sm:p-10"
+          className="fixed inset-0 m-0 h-[100dvh] max-h-none w-screen max-w-none cursor-zoom-out border-0 bg-black/90 px-6 pb-6 pt-20 text-white backdrop:bg-transparent sm:px-10 sm:pb-10"
         >
-          <div
-            className="flex max-h-full max-w-full flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8"
-            onClick={(e) => e.stopPropagation()}
+          <button
+            type="button"
+            autoFocus
+            aria-label="Close expanded image"
+            onClick={close}
+            className="absolute right-4 top-4 flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6 sm:top-6"
           >
+            <X className="size-5" aria-hidden="true" />
+          </button>
+          <figure className="mx-auto flex h-full max-w-6xl flex-col items-center justify-center gap-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={activeImage.src}
               width={activeImage.width}
               height={activeImage.height}
-              className="max-h-[85vh] w-auto max-w-full rounded-lg object-contain sm:max-w-[min(70vw,100%)]"
+              className="min-h-0 max-h-full w-auto max-w-full rounded-lg object-contain"
               alt={notes[activeImage.name] ?? ""}
             />
             {notes[activeImage.name] && (
-              <p className="max-w-64 shrink-0 text-sm leading-relaxed text-white/80 sm:text-inherit">
+              <figcaption
+                id="image-annotation"
+                className="max-h-[30dvh] w-full max-w-2xl shrink-0 overflow-y-auto whitespace-pre-line text-center text-sm leading-relaxed text-white/90"
+              >
                 {notes[activeImage.name]}
-              </p>
+              </figcaption>
             )}
-          </div>
-        </div>
+          </figure>
+        </dialog>
       )}
     </>
   );
