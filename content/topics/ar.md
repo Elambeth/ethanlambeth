@@ -17,7 +17,6 @@ pages:
   - hyperobject
   - webcam
   - voice
-  - resources
 ---
 
 When we finally get decent enough AR glasses I think there will be a lot of new paradigms and social norms that arise.

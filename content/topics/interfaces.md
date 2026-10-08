@@ -24,7 +24,6 @@ pages:
   - will-we-gesture
   - input-devices
   - the-hand
-  - resources
 ---
 
 I guess the thing about interfaces is that they are mostly text, the code stuff, and images. That is ALL we have.
