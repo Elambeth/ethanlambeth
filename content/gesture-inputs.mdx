@@ -1,0 +1,76 @@
+---
+title: "Gesture Inputs"
+publishedAt: "2026-10-08"
+summary: ""
+draft: true
+---
+
+I have been thinking a lot about what gestures are most natural for the human hand. 
+
+This is because I am spending a lot of time thinking about what wonders augmented reality glasses will provide us. 
+
+I recently got claude to revive my dad's old Ipod, and looking at the design of the large wheel, I realized that it is the perfect design for input from just one thumb.
+
+____
+
+Then I started thinking about other devices and how well suited they fit your hands:
+
+- the Ipod gives you one thumbs worth of input
+
+![](/blog/gesture-inputs/img-muz9uxjr.png)
+
+The smartphone is great to use with 2 thumbs, but the rest of your fingers are wasted. 
+
+![](/blog/gesture-inputs/img-muz9dzlc.png)
+
+
+- The game controller is great for 2 thumbs and 2 index fingers, so a little bit better.(see my messing around with a playstation controller here)
+
+![](/blog/gesture-inputs/img-muz9tv32.png)
+
+
+- the standard keyboard is great for 9 fingers, as most people only use one thumb for space bar. The other hovers like a (my split lets me use all 10 :D)
+
+![](/blog/gesture-inputs/img-muz9uezh.png)
+
+
+But all of these have one big issue, you have to hold a physical object! And I think in the beautiful future we ought to build we should be free of such a silly constraint. I should not have to rush home from my walk to my laptop because I got an idea and I need high output bits per second. 
+
+I want to imagine what the virtual hyperobject most optimally suited for gesture input. I thought I would start by tryinig to calculate what are the most "natural" gestures for the human hand. Natural meaning it takes minimal effort, moving a minimal amount in a natural direction. You can find the interactive demo for that here: https://ethanlambeth.com/natural-hand/
+
+
+However I wasn't really happy with these results as optimizing for "naturalness" isnt really the goal, because I suddenly had this huge list of gestures ranked that all felt kind of obvious and a little useless. I needed to filter them again in some way. Because a lot of the most natural gestures are very similar. 
+
+So then I thought to seperate these by how *unique* the gestures are, if you want to use a gesture repeatedly as a method of inptut you don't want it to clash with others. 
+
+I also considered that there are already semantic meanings behind gestures. When you make a *pinching* gesture you expect it to have quite narrow result such as selecting something, or zooming in. While if you make a *swiping* gesture you would expect to scroll or move to some other part of the interface.
+
+I wanted to try and account for the semantic meanings of hand gestures. I sent my agent crawling for any literature on this topic, if you are interested you can point yours at this [URL]
+
+> There are other excellent rabbitholes here such as incorporating sign language, or even the meaning within hand symbols accross different cultures such as indian classical dance. More here:
+
+So then I got claude to churn some more and we landed on this demo: https://ethanlambeth.com/hand-input
+
+
+with most useful results being:
+
+| Command | Gesture | Meaning |
+| --- | --- | --- |
+| Select | Index middle side tap | convention |
+| Inspect / more | Index pinch hold | convention |
+| Back | Middle pinch | convention |
+| Menu / home | Middle middle pad press-hold | – |
+| Dismiss / close | Middle distal pad tap | – |
+| Scroll down | Index distal side stroke out | convention |
+| Scroll up | Index distal side stroke in | convention |
+| Next | Index distal side roll up | convention |
+| Previous | Index distal side roll down | convention |
+| Increase | Middle distal pad stroke in | elicitation |
+| Decrease | Middle distal pad stroke out | elicitation |
+| Zoom in | Middle middle pad stroke in | elicitation |
+| Zoom out | Middle middle pad stroke out | elicitation |
+
+
+Now that I have scratched this itch about what gestures I should be trying to capture in the first place, I will next focus on how to record them. (I actually started this whole endeavor by listing out the different gestures that current devices recognize and trying to see what I could salvage from that. But I realized that is just an arbitrary constraint of current technology and it is a lot more fun to go top down. 
+
+In my early post where I looked at EMG wristbands I imagined the technology getting good enough where it is a thin sticker that is overlayed onto the muscle of your hand. I thought of some kind of Ta Moko design of the hand and arm. As I write this now it's not a current technology so I will have to make do with a camera and Mediapipe or some other hacky solution...
