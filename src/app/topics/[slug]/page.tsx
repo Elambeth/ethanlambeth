@@ -1,7 +1,6 @@
 import EntryList from "@/components/entry-list";
 import { getTopic, getTopicPosts, getTopics, getWikiPages } from "@/data/wiki";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
@@ -42,13 +41,7 @@ export default async function TopicPage({
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-12 sm:px-6 sm:pt-16">
       <div className="max-w-2xl">
-        <Link
-          href="/blog"
-          className="link-underline rounded-sm text-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          All writing
-        </Link>
-        <header className="mb-14 mt-8">
+        <header className="mb-14">
           <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
             {topic.title}
           </h1>

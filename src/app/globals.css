@@ -158,8 +158,15 @@
     margin-top: 0;
   }
 
+  /* cap tall (portrait) images so they sit in the text flow; landscape stays full width */
   .article-prose img {
-    @apply rounded-md;
+    @apply mx-auto rounded-md;
+    max-height: 26rem;
+    width: auto;
+  }
+
+  .article-prose img[src^="/blog/gesture-inputs/"] {
+    max-height: 16rem;
   }
 
   .note-prose p {

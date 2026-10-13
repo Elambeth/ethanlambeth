@@ -44,6 +44,9 @@ export default async function WikiPage({
           <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
             {page.title}
           </h1>
+          {page.summary && (
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">{page.summary}</p>
+          )}
           {topics.length > 0 && (
             <nav aria-label="Topics" className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-sm text-muted-foreground">
               {topics.map((topic) => (
@@ -56,9 +59,6 @@ export default async function WikiPage({
                 </Link>
               ))}
             </nav>
-          )}
-          {page.summary && (
-            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">{page.summary}</p>
           )}
         </header>
         <article

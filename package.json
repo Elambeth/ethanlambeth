@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pack:what-is-this": "node scripts/pack-what-is-this.mjs"
+    "pack:what-is-this": "node scripts/pack-what-is-this.mjs",
+    "admin": "node scripts/input-gestures-admin.mjs",
+    "admin:blog": "node scripts/blog-admin.mjs"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",
@@ -30,6 +32,7 @@
     "react-markdown": "^9.0.1",
     "rehype-pretty-code": "^0.13.2",
     "rehype-stringify": "^10.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
     "shiki": "^1.7.0",
@@ -39,13 +42,13 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
-    "sharp": "0.35.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "15.5.26",
     "postcss": "^8",
+    "sharp": "0.35.4",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
