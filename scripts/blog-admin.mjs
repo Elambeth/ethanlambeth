@@ -55,7 +55,7 @@ const esc = (s) => s.replace(/[.*+?^${}()|[\]\\-]/g, "\\$&");
 const KINDS = {
   post: { dir: "content", ext: ".mdx", img: "blog", msg: "blog", own: ["title", "publishedAt", "summary", "topics", "draft"] },
   topic: { dir: "content/topics", ext: ".md", img: "topics", msg: "topic", own: ["title", "summary", "pages"] },
-  wiki: { dir: "content/wiki", ext: ".md", img: "wiki", msg: "wiki", own: ["title", "summary", "topics"] },
+  wiki: { dir: "content/wiki", ext: ".md", img: "wiki", msg: "wiki", own: ["title", "summary", "topics", "draft"] },
 };
 const kindOf = (k) => {
   if (!KINDS[k]) throw new Error("unknown kind: " + k);
@@ -181,7 +181,7 @@ function writeEntry({ kind, slug, prevSlug, title, summary, publishedAt, draft, 
   fm.push(`summary: ${JSON.stringify(summary)}`);
   if (kind !== "topic" && topics.length) fm.push(`topics: ${inline(topics)}`);
   if (kind === "topic") fm.push(pages.length ? ["pages:", ...pages.map((p) => `  - ${p}`)].join("\n") : "pages: []");
-  if (kind === "post" && draft) fm.push("draft: true");
+  if (kind !== "topic" && draft) fm.push("draft: true");
   mkdirSync(join(ROOT, K.dir), { recursive: true });
   writeFileSync(file, `---\n${fm.join("\n")}\n${extra}---\n\n${body.trim()}\n`);
 
@@ -311,6 +311,7 @@ const PAGE = String.raw`<!doctype html>
   #meta input:focus { border-color: var(--muted); }
   #meta .wide { grid-column: 1 / -1; }
   body:not(.kind-post) #meta { grid-template-columns: 1fr 1fr; }
+  body.kind-wiki #meta { grid-template-columns: 1fr 1fr auto; }
   body:not(.kind-post) .only-post, body.kind-topic .no-topic, body:not(.kind-topic) .only-topic { display: none !important; }
   .refs { font-size: 11px; color: var(--muted); }
   .page .notes-h { margin: 56px 0 0; padding-bottom: 12px; border-bottom: 1px solid var(--border); font-size: .875rem; font-weight: 500; }
@@ -495,7 +496,7 @@ const PAGE = String.raw`<!doctype html>
     <label>Title<input type="text" id="f-title" placeholder="Title"></label>
     <label>Summary<input type="text" id="f-summary" placeholder="One line, shown under the title and in the list"></label>
     <label class="only-post">Date<input type="date" id="f-date"></label>
-    <label class="check only-post" title="Drafts are saved but hidden from the site"><input type="checkbox" id="f-draft"> Draft</label>
+    <label class="check no-topic" title="Drafts are saved but hidden from the site"><input type="checkbox" id="f-draft"> Draft</label>
     <label class="wide no-topic"><span>Topics <span class="refs" id="topics-known"></span></span><input type="text" id="f-topics" spellcheck="false" placeholder="comma separated, e.g. ar, interfaces"></label>
     <label class="wide only-topic"><span>Pages, in reading order <span class="refs">(wiki or post slugs, comma separated; tagged ones not listed here go last)</span></span><input type="text" id="f-pages" spellcheck="false" placeholder="layers, faces, …"></label>
     <div class="slugwrap"><span>ethanlambeth.com<span id="urlbase">/blog/</span></span><input type="text" id="f-slug" spellcheck="false" placeholder="slug"></div>
@@ -1047,7 +1048,7 @@ async function newEntry(title = "") {
   current = null; slugTouched = false;
   for (const x of [F.title, F.summary, F.slug, F.topics, F.pages]) x.value = "";
   F.title.value = title; F.slug.value = title ? slugify(title) : "";
-  F.date.value = today(); F.draft.checked = kind === "post";
+  F.date.value = today(); F.draft.checked = kind !== "topic";
   setBody(""); markSaved(); renderPreview(); loadList(); loadBacklinks();
   history.pushState(null, "", hashOf(kind, ""));
   if (title || document.body.classList.contains("zen")) view.focus();
@@ -1057,7 +1058,7 @@ $("#new").onclick = () => newEntry();
 
 /** Writes a fresh, empty note to disk (not published). */
 async function createNote(k, title, slug = slugify(title)) {
-  const payload = { kind: k, slug, prevSlug: null, title, summary: "", publishedAt: today(), draft: k === "post", topics: [], pages: [], body: "" };
+  const payload = { kind: k, slug, prevSlug: null, title, summary: "", publishedAt: today(), draft: k !== "topic", topics: [], pages: [], body: "" };
   const r = await fetch("/api/entry", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
   const j = await r.json();
   if (!r.ok) { flash("couldn't create: " + j.error, true); return false; }
@@ -1114,7 +1115,7 @@ async function save(andPublish = false) {
 }
 $("#save").onclick = () => save();
 $("#publish").onclick = async () => {
-  const draftNote = kind === "post" && F.draft.checked ? "\n\n(It's marked Draft, so it'll be committed but hidden on the site.)" : "";
+  const draftNote = kind !== "topic" && F.draft.checked ? "\n\n(It's marked Draft, so it'll be committed but hidden on the site.)" : "";
   if (!confirm("Commit + push this " + NOUN[kind] + " to main? Cloudflare Pages will deploy." + draftNote)) return;
   $("#publish").disabled = true; flash("pushing…", true);
   await save(true);

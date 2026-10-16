@@ -45,7 +45,7 @@ function readDir(dir: string, ext: string) {
 }
 
 function rawPages() {
-  return readDir(WIKI_DIR, ".md");
+  return readDir(WIKI_DIR, ".md").filter((p) => !p.data.draft);
 }
 
 type Notes = ReturnType<typeof noteIndex>;
