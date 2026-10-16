@@ -1,4 +1,5 @@
 import EntryList from "@/components/entry-list";
+import Glyph from "@/components/glyph";
 import { getTopic, getTopicPosts, getTopics, getWikiPages } from "@/data/wiki";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -30,35 +31,62 @@ export default async function TopicPage({
   // Wiki pages and posts are one list: curated order first, then anything else tagged with this topic.
   const wiki = (await getWikiPages())
     .filter((p) => p.topics.includes(slug))
-    .map((p) => ({ slug: p.slug, href: `/wiki/${p.slug}`, title: p.title, summary: p.summary }));
-  const posts = getTopicPosts(slug).map((p) => ({ ...p, href: `/blog/${p.slug}` }));
+    .map((p) => ({
+      slug: p.slug,
+      href: `/wiki/${p.slug}`,
+      title: p.title,
+      summary: p.summary,
+    }));
+  const posts = getTopicPosts(slug).map((p) => ({
+    ...p,
+    href: `/blog/${p.slug}`,
+  }));
   const rank = (s: string) => {
     const i = topic.pages.indexOf(s);
     return i === -1 ? Infinity : i;
   };
-  const entries = [...wiki, ...posts].sort((a, b) => rank(a.slug) - rank(b.slug));
+  const entries = [...wiki, ...posts].sort(
+    (a, b) => rank(a.slug) - rank(b.slug),
+  );
 
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-12 sm:px-6 sm:pt-16">
       <div className="max-w-2xl">
         <header className="mb-14">
-          <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
-            {topic.title}
-          </h1>
+          <div className="flex items-center gap-5">
+            {topic.glyph && (
+              <Glyph
+                kind={topic.glyph}
+                className="h-[60px] w-24 flex-none rounded-[3px] border border-border bg-background"
+              />
+            )}
+            <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
+              {topic.title}
+            </h1>
+          </div>
           <div
             className="prose article-prose mt-6 text-muted-foreground dark:prose-invert"
             dangerouslySetInnerHTML={{ __html: topic.introHtml }}
           />
         </header>
 
-        <section aria-labelledby="pages-heading">
-          <h2 id="pages-heading" className="border-b border-border pb-3 text-sm font-medium">
-            Notes
-          </h2>
-          <EntryList
-            entries={entries.map(({ href, title, summary }) => ({ href, title, summary }))}
-          />
-        </section>
+        {entries.length > 0 && (
+          <section aria-labelledby="pages-heading">
+            <h2
+              id="pages-heading"
+              className="border-b border-border pb-3 text-sm font-medium"
+            >
+              Notes
+            </h2>
+            <EntryList
+              entries={entries.map(({ href, title, summary }) => ({
+                href,
+                title,
+                summary,
+              }))}
+            />
+          </section>
+        )}
       </div>
     </main>
   );

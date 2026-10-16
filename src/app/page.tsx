@@ -11,7 +11,7 @@ const things: { title: string; summary: string; glyph: GlyphKind; href?: string 
     title: "Panacea Index",
     summary: "Fact checking health influencers.",
     glyph: "eye",
-    href: "https://panaceaindex.com",
+    href: "/topics/panacea-index",
   },
   {
     title: "Keyboard layout",
@@ -35,6 +35,7 @@ const things: { title: string; summary: string; glyph: GlyphKind; href?: string 
     title: "Agent swarms",
     summary: "What conflict between large swarms of agents could look like.",
     glyph: "takeover",
+    href: "/topics/thinking",
   },
 ];
 

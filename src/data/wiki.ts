@@ -2,6 +2,7 @@ import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
 import { markdownToHTML } from "@/data/blog";
+import type { GlyphKind } from "@/components/glyph";
 import { WIKILINK, linkNotes, noteIndex, resolveTarget } from "@/lib/notes.mjs";
 
 // Topics live in content/topics/<slug>.md, wiki pages in content/wiki/<slug>.md.
@@ -17,6 +18,7 @@ export type Topic = {
   title: string;
   summary: string;
   pages: string[]; // reading order
+  glyph?: GlyphKind; // animated thumbnail in the header
   introHtml: string;
 };
 
@@ -79,6 +81,7 @@ export async function getTopics(): Promise<Topic[]> {
       title: String(t.data.title ?? t.slug),
       summary: String(t.data.summary ?? ""),
       pages: (t.data.pages as string[] | undefined) ?? [],
+      glyph: t.data.glyph as GlyphKind | undefined,
       introHtml: await render(t.content, notes),
     }))
   );

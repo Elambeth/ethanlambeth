@@ -1,6 +1,7 @@
 ---
 title: "Interfaces"
 summary: "Interfaces, broadly."
+glyph: dock
 pages:
   - thinking-assistant
   - induced-fit
