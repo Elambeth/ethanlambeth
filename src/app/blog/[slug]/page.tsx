@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ImageCarousel from "@/components/image-carousel";
+import PostBody from "@/components/post-body";
 
 export async function generateStaticParams() {
   let posts = await getBlogPosts();
@@ -107,9 +108,10 @@ export default async function Blog({
             </p>
           )}
         </header>
-        <article
+        <PostBody
+          as="article"
+          html={post.source}
           className="prose article-prose dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: post.source }}
         />
         {post.metadata.gallery && (
           <ImageCarousel images={post.metadata.gallery} />

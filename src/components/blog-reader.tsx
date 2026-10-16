@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import ImageCarousel, { type CarouselImage } from "@/components/image-carousel";
+import PostBody from "@/components/post-body";
 
 export type BlogReaderEntry = {
   id: string;
@@ -150,9 +151,9 @@ export default function BlogReader({ entries }: { entries: BlogReaderEntry[] }) 
                 {activeEntry.dateLabel}
               </p>
             )}
-            <div
+            <PostBody
+              html={activeEntry.html}
               className="prose dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: activeEntry.html }}
             />
           </section>
         </div>
