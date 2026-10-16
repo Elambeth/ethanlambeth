@@ -22,7 +22,7 @@ const groups: { heading: string; things: Thing[] }[] = [
         summary:
           "What conflict between large swarms of agents could look like.",
         glyph: "takeover",
-        href: "/topics/thinking",
+        href: "/topics/agent-swarms",
       },
       {
         title: "Interfaces",
