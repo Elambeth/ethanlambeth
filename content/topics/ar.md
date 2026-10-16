@@ -1,7 +1,6 @@
 ---
 title: "Augmented Reality"
 summary: "What an AR world would look like, and the social norms that form."
-glyph: brackets
 pages:
   - adding-and-removing
   - layers
@@ -18,8 +17,7 @@ pages:
   - hyperobject
   - webcam
   - voice
+glyph: brackets
 ---
 
 When we finally get decent enough AR glasses I think there will be a lot of new paradigms and social norms that arise.
-
-(Arguably this is also an [interfaces](/topics/interfaces) question.)
