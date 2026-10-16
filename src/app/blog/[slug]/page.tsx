@@ -1,7 +1,6 @@
 import { getBlogPosts, getPost } from "@/data/blog";
 import { DATA } from "@/data/resume";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import ImageCarousel from "@/components/image-carousel";
 import PostBody from "@/components/post-body";
@@ -92,13 +91,7 @@ export default async function Blog({
         }}
       />
       <div className="max-w-2xl">
-        <Link
-          href="/blog"
-          className="rounded-sm text-sm text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          All writing
-        </Link>
-        <header className="mb-12 mt-8">
+        <header className="mb-12">
           <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-5xl">
             {post.metadata.title}
           </h1>
