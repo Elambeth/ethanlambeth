@@ -5,7 +5,7 @@ pages: []
 glyph: takeover
 ---
 
-We have recently been seeing fleets of agents being directed towards goals. 
+We have recently been seeing fleets of agents being directed towards goals. Such as solving math problems.
 
 These systems are currently incredibly expensive to run^. But over time the cost will fall. 
 
