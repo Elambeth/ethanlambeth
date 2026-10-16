@@ -1,8 +1,8 @@
 ---
 title: "Panacea Index"
 summary: "Fact checking health influencers."
-glyph: eye
 pages: []
+glyph: eye
 ---
 
-I am building [panaceaindex.com](https://panaceaindex.com), which fact checks the claims health influencers make.
+After I dropped out of college, I spent the next while building [panaceaindex.com](https://panaceaindex.com), which is a system to try and fact check health influencers.
