@@ -2,10 +2,11 @@ import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
 import { markdownToHTML } from "@/data/blog";
+import { WIKILINK, linkNotes, noteIndex, resolveTarget } from "@/lib/notes.mjs";
 
 // Topics live in content/topics/<slug>.md, wiki pages in content/wiki/<slug>.md.
 // Posts in content/*.mdx join a topic with `topics: [slug]` in their frontmatter.
-// Inside wiki pages, [[slug]] or [[slug|text]] links to another wiki page.
+// [[slug]] or [[slug|text]] links any wiki page, post or topic (see src/lib/notes.mjs).
 
 const TOPICS_DIR = path.join(process.cwd(), "content", "topics");
 const WIKI_DIR = path.join(process.cwd(), "content", "wiki");
@@ -30,8 +31,6 @@ export type WikiPage = {
 
 export type TopicPost = { slug: string; title: string; summary: string };
 
-const WIKILINK = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
-
 function readDir(dir: string, ext: string) {
   if (!fs.existsSync(dir)) return [];
   return fs
@@ -47,29 +46,22 @@ function rawPages() {
   return readDir(WIKI_DIR, ".md");
 }
 
-async function render(markdown: string, titles: Map<string, string>) {
-  const linked = markdown.replace(WIKILINK, (_, slug: string, text?: string) => {
-    const target = slug.trim();
-    const label = text?.trim() ?? titles.get(target) ?? target;
-    return titles.has(target) ? `[${label}](/wiki/${target})` : label;
-  });
-  return markdownToHTML(linked);
-}
+type Notes = ReturnType<typeof noteIndex>;
 
-function pageTitles() {
-  return new Map(rawPages().map((p) => [p.slug, String(p.data.title ?? p.slug)]));
-}
+const render = (markdown: string, notes: Notes) => markdownToHTML(linkNotes(markdown, notes));
 
 export async function getWikiPages(): Promise<WikiPage[]> {
-  const titles = pageTitles();
+  const notes = noteIndex();
   return Promise.all(
     rawPages().map(async (p) => ({
       slug: p.slug,
       title: String(p.data.title ?? p.slug),
       summary: String(p.data.summary ?? ""),
       topics: (p.data.topics as string[] | undefined) ?? [],
-      links: Array.from(p.content.matchAll(WIKILINK), (m) => m[1].trim()),
-      html: await render(p.content, titles),
+      links: Array.from(p.content.matchAll(WIKILINK), (m) => resolveTarget(m[1], notes))
+        .filter((n) => n?.kind === "wiki")
+        .map((n) => n!.slug),
+      html: await render(p.content, notes),
     }))
   );
 }
@@ -80,14 +72,14 @@ export async function getWikiPage(slug: string) {
 }
 
 export async function getTopics(): Promise<Topic[]> {
-  const titles = pageTitles();
+  const notes = noteIndex();
   return Promise.all(
     readDir(TOPICS_DIR, ".md").map(async (t) => ({
       slug: t.slug,
       title: String(t.data.title ?? t.slug),
       summary: String(t.data.summary ?? ""),
       pages: (t.data.pages as string[] | undefined) ?? [],
-      introHtml: await render(t.content, titles),
+      introHtml: await render(t.content, notes),
     }))
   );
 }

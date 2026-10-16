@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { linkNotes, noteIndex, rehypeImageSize } from "@/lib/notes.mjs";
 
 type Metadata = {
   title: string;
@@ -30,6 +31,7 @@ export async function markdownToHTML(markdown: string) {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype)
+    .use(rehypeImageSize) // ![alt|400](src)
     .use(rehypePrettyCode, {
       // https://rehype-pretty.pages.dev/#usage
       theme: {
@@ -49,7 +51,7 @@ export async function getPost(slug: string) {
   let source = fs.readFileSync(filePath, "utf-8");
   const { content: rawContent, data } = matter(source);
   const metadata = data as Metadata;
-  const content = await markdownToHTML(rawContent);
+  const content = await markdownToHTML(linkNotes(rawContent, noteIndex()));
   return {
     source: content,
     metadata,
