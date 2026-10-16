@@ -3,7 +3,20 @@
 import { useEffect, useRef } from "react";
 
 // Tiny looping canvas drawings for the home page rows (one blue, thin lines).
-export type GlyphKind = "eye" | "typing" | "dock" | "brackets" | "takeover";
+export type GlyphKind =
+  | "eye"
+  | "typing"
+  | "dock"
+  | "brackets"
+  | "takeover"
+  | "wheel"
+  | "pinch"
+  | "lens"
+  | "sweep"
+  | "build"
+  | "stack"
+  | "panes"
+  | "tabs";
 
 type Colors = { blue: string; ink: string; faint: string };
 type Ctx = Colors & { ctx: CanvasRenderingContext2D; w: number; h: number; lw: number };
@@ -270,6 +283,266 @@ const DRAW: Record<GlyphKind, (c: Ctx, t: number, S: State) => void> = {
         c.ctx.globalAlpha = 1;
       }
       dot(c, a.x, a.y, h * 0.022, a.blue ? c.blue : c.ink);
+    }
+  },
+  // Gesture inputs: an iPod click wheel, a thumb scrolling round it then tapping the centre
+  wheel(c, T) {
+    const { w, h } = c, g = c.ctx, cx = w / 2, cy = h / 2, t = T % 4.2;
+    const R = h * 0.4, r0 = R * 0.38, mid = (R + r0) / 2;
+    ring(c, cx, cy, R, c.ink);
+    ring(c, cx, cy, r0, c.ink);
+    const a = -Math.PI / 2 + ease((t - 0.3) / 2.2) * Math.PI * 1.6;
+    const tap = t > 2.9 && t < 3.5 ? Math.sin(((t - 2.9) / 0.6) * Math.PI) : 0;
+    if (t < 2.9) {
+      g.strokeStyle = c.blue;
+      g.lineWidth = c.lw * 1.6;
+      g.beginPath();
+      g.arc(cx, cy, mid, a - 0.9 * clamp(t / 0.6), a);
+      g.stroke();
+      dot(c, cx + Math.cos(a) * mid, cy + Math.sin(a) * mid, h * 0.06, c.blue);
+    }
+    if (tap > 0) {
+      g.globalAlpha = tap;
+      dot(c, cx, cy, r0 * 0.78, c.blue);
+      g.globalAlpha = 1;
+    }
+  },
+
+  // Gesture inputs: thumb and index closing into a pinch, a blue spark at contact
+  pinch(c, T) {
+    const { w, h } = c, g = c.ctx, t = T % 2.8, cy = h * 0.5;
+    const p = t < 1 ? ease(t / 1) : t < 1.6 ? 1 : 1 - ease((t - 1.6) / 0.9);
+    const tx = w * 0.62, gap = h * 0.26 * (1 - p) + h * 0.02;
+    g.strokeStyle = c.ink;
+    g.lineWidth = c.lw * 1.3;
+    g.beginPath(); // index finger, two knuckles
+    g.moveTo(w * 0.2, h * 0.32);
+    g.lineTo(w * 0.42, h * 0.18 + p * h * 0.06);
+    g.lineTo(tx, cy - gap);
+    g.moveTo(w * 0.24, h * 0.78); // thumb
+    g.lineTo(w * 0.44, h * 0.76 - p * h * 0.06);
+    g.lineTo(tx, cy + gap);
+    g.stroke();
+    dot(c, tx, cy - gap, h * 0.035, p > 0.95 ? c.blue : c.ink);
+    dot(c, tx, cy + gap, h * 0.035, p > 0.95 ? c.blue : c.ink);
+    if (t > 1 && t < 1.8) {
+      const k = (t - 1) / 0.8;
+      g.globalAlpha = 1 - k;
+      ring(c, tx, cy, h * (0.06 + k * 0.2), c.blue);
+      g.globalAlpha = 1;
+    }
+  },
+
+  // Live ad-blocker: a lens drifts over a wall of billboards, the ads inside it gone
+  lens(c, T) {
+    const { w, h } = c, g = c.ctx;
+    const boards: number[][] = [];
+    const bw = w * 0.24, bh = h * 0.3;
+    for (let r = 0; r < 2; r++) for (let i = 0; i < 3; i++)
+      boards.push([w * 0.1 + i * w * 0.28 + (r ? w * 0.04 : 0), h * 0.13 + r * h * 0.42, bw, bh]);
+    const lx = w * (0.5 + 0.3 * Math.sin(T * 0.7)), ly = h * (0.5 + 0.22 * Math.sin(T * 1.1 + 1));
+    const LR = h * 0.3;
+    const ad = (x: number, y: number, bw: number, bh: number) => {
+      g.save();
+      rrect(c, x, y, bw, bh, 1);
+      g.clip();
+      for (let k = -bh; k < bw; k += h * 0.07) line(c, x + k, y + bh, x + k + bh, y, c.faint);
+      g.restore();
+      rrect(c, x, y, bw, bh, 1);
+      g.strokeStyle = c.ink;
+      g.lineWidth = c.lw;
+      g.stroke();
+    };
+    for (const [x, y, bw, bh] of boards) ad(x, y, bw, bh);
+    g.save();
+    g.beginPath();
+    g.arc(lx, ly, LR, 0, Math.PI * 2);
+    g.clip();
+    g.clearRect(0, 0, w, h);
+    g.globalAlpha = 0.08;
+    g.fillStyle = c.blue;
+    g.fillRect(0, 0, w, h);
+    g.globalAlpha = 1;
+    for (const [x, y, bw, bh] of boards) {
+      rrect(c, x, y, bw, bh, 1);
+      g.strokeStyle = c.faint;
+      g.lineWidth = c.lw;
+      g.stroke();
+    }
+    g.restore();
+    ring(c, lx, ly, LR, c.blue, c.lw * 1.4);
+  },
+
+  // Live ad-blocker: a blue scan sweeps a street, wiping billboards clean, then the ads creep back
+  sweep(c, T) {
+    const { w, h } = c, g = c.ctx, t = T % 5, base = h * 0.84;
+    const sx = t < 3.6 ? lerp(-w * 0.05, w * 1.05, ease((t - 0.4) / 2.4)) : lerp(w * 1.05, -w * 0.05, ease((t - 3.8) / 1));
+    line(c, w * 0.04, base, w * 0.96, base, c.faint);
+    const boards = [
+      [0.08, 0.24, 0.24, 0.3],
+      [0.4, 0.12, 0.26, 0.38],
+      [0.73, 0.3, 0.2, 0.26],
+    ].map(([x, y, bw, bh]) => [x * w, y * h, bw * w, bh * h]);
+    for (const [x, y, bw, bh] of boards) {
+      line(c, x + bw / 2, y + bh, x + bw / 2, base, c.ink);
+      for (const clean of [false, true]) {
+        g.save();
+        g.beginPath();
+        if (clean) g.rect(0, 0, sx, h);
+        else g.rect(sx, 0, w, h);
+        g.clip();
+        rrect(c, x, y, bw, bh, 1);
+        if (clean) {
+          g.fillStyle = c.blue;
+          g.globalAlpha = 0.18;
+          g.fill();
+          g.globalAlpha = 1;
+          g.strokeStyle = c.blue;
+        } else {
+          g.save();
+          g.clip();
+          // the "ad": a headline bar and two lines of copy
+          g.fillStyle = c.ink;
+          g.fillRect(x + bw * 0.14, y + bh * 0.22, bw * 0.72, bh * 0.2);
+          line(c, x + bw * 0.14, y + bh * 0.62, x + bw * 0.86, y + bh * 0.62, c.ink);
+          line(c, x + bw * 0.14, y + bh * 0.8, x + bw * 0.6, y + bh * 0.8, c.ink);
+          g.restore();
+          rrect(c, x, y, bw, bh, 1);
+          g.strokeStyle = c.ink;
+        }
+        g.lineWidth = c.lw;
+        g.stroke();
+        g.restore();
+      }
+    }
+    if (sx > 0 && sx < w) line(c, sx, h * 0.04, sx, base, c.blue, c.lw * 1.3);
+  },
+
+  // How to explain things: concepts appear one by one, each linked back to what came before
+  build(c, T) {
+    const { w, h } = c, g = c.ctx, step = 0.75;
+    const N: [number, number][] = [[0.12, 0.62], [0.3, 0.3], [0.33, 0.78], [0.54, 0.52], [0.72, 0.24], [0.88, 0.66]];
+    const P = [[], [0], [0], [1, 2], [3], [3, 4]];
+    const cycle = N.length * step + 1.8, t = T % cycle;
+    const fade = 1 - ease((t - (cycle - 0.6)) / 0.5);
+    const newest = Math.min(N.length - 1, Math.floor(t / step));
+    g.globalAlpha = fade;
+    N.forEach(([nx, ny], i) => {
+      const k = (t - i * step) / step;
+      if (k <= 0) return;
+      const x = nx * w, y = ny * h;
+      for (const j of P[i]) {
+        const px = N[j][0] * w, py = N[j][1] * h, e = ease(k * 1.6);
+        line(c, px, py, lerp(px, x, e), lerp(py, y, e), c.ink);
+      }
+    });
+    N.forEach(([nx, ny], i) => {
+      const k = (t - i * step) / step;
+      if (k <= 0) return;
+      const r = h * 0.07 * ease(k * 2);
+      const blue = i === newest;
+      dot(c, nx * w, ny * h, r, blue ? c.blue : c.ink);
+    });
+    g.globalAlpha = 1;
+  },
+
+  // How to explain things: blocks laid from the ground up, the newest in blue
+  stack(c, T) {
+    const { w, h } = c, g = c.ctx, step = 0.7;
+    const L = [0.62, 0.5, 0.38, 0.26], bh = h * 0.15, base = h * 0.86;
+    const cycle = L.length * step + 1.8, t = T % cycle;
+    const fade = 1 - ease((t - (cycle - 0.6)) / 0.5);
+    line(c, w * 0.1, base, w * 0.9, base, c.faint);
+    g.globalAlpha = fade;
+    L.forEach((bw, i) => {
+      const k = (t - i * step) / (step * 0.8);
+      if (k <= 0) return;
+      const y = base - (i + 1) * (bh + h * 0.02);
+      const yy = lerp(-bh, y, 1 - Math.pow(1 - clamp(k), 3));
+      const x = (w - bw * w) / 2;
+      rrect(c, x, yy, bw * w, bh, 1.5);
+      const newest = i === Math.min(L.length - 1, Math.floor(t / step));
+      if (newest) {
+        g.fillStyle = c.blue;
+        g.fill();
+      }
+      g.strokeStyle = newest ? c.blue : c.ink;
+      g.lineWidth = c.lw;
+      g.stroke();
+    });
+    g.globalAlpha = 1;
+  },
+
+  // Useful computer things: a tmux window, lines typing out in whichever pane is active
+  panes(c, T) {
+    const { w, h } = c, g = c.ctx;
+    const X = w * 0.1, Y = h * 0.12, W = w * 0.8, H = h * 0.72, sb = h * 0.08;
+    const panes = [
+      [X, Y, W * 0.55, H],
+      [X + W * 0.55, Y, W * 0.45, H * 0.5],
+      [X + W * 0.55, Y + H * 0.5, W * 0.45, H * 0.5],
+    ];
+    const seg = 2.2, active = Math.floor(T / seg) % 3, local = T % seg;
+    rrect(c, X, Y, W, H + sb, 2);
+    g.strokeStyle = c.ink;
+    g.lineWidth = c.lw;
+    g.stroke();
+    line(c, X + W * 0.55, Y, X + W * 0.55, Y + H, c.ink);
+    line(c, X + W * 0.55, Y + H * 0.5, X + W, Y + H * 0.5, c.ink);
+    line(c, X, Y + H, X + W, Y + H, c.faint);
+    g.fillStyle = c.blue;
+    g.fillRect(X + 1, Y + H + 1, W * 0.18, sb - 1); // status bar session tag
+    panes.forEach(([px, py, pw, ph], i) => {
+      const pad = h * 0.07, lh = h * 0.1, rows = Math.floor((ph - pad) / lh);
+      const typed = i === active ? local * 7 : 99;
+      let used = 0, cx = px + pad, cy = py + pad;
+      for (let r = 0; r < rows; r++) {
+        const full = (0.35 + hash(i * 31 + r + (Math.floor(T / (seg * 3)) * 7)) * 0.5) * (pw - pad * 2);
+        const len = clamp(typed - used, 0, 1) * full;
+        used += 1;
+        const y = py + pad + r * lh + lh * 0.3;
+        if (len > 0) line(c, px + pad, y, px + pad + len, y, i === active ? c.ink : c.faint);
+        if (len > 0) { cx = px + pad + len; cy = y; }
+      }
+      if (i === active && Math.floor(T * 2.5) % 2 === 0)
+        g.fillRect(cx + h * 0.02, cy - lh * 0.3, h * 0.04, lh * 0.6);
+    });
+  },
+
+  // Useful computer things: a row of hoarded tabs; the ones you haven't looked at fall asleep
+  tabs(c, T) {
+    const { w, h } = c, g = c.ctx, n = 6, step = 0.9;
+    const X = w * 0.06, Y = h * 0.3, tw = (w * 0.88) / n;
+    const now = Math.floor(T / step);
+    line(c, w * 0.04, Y + h * 0.22, w * 0.96, Y + h * 0.22, c.faint);
+    for (let i = 0; i < n; i++) {
+      let last = -99;
+      for (let k = now; k > now - 12; k--) if (Math.floor(hash(k) * n) === i) { last = k; break; }
+      const idle = T - last * step;
+      const active = last === now;
+      const sleep = clamp((idle - 2.6) / 0.6);
+      const x = X + i * tw;
+      rrect(c, x + tw * 0.06, Y, tw * 0.88, h * 0.22, 2);
+      if (active) {
+        g.fillStyle = c.blue;
+        g.fill();
+      }
+      g.strokeStyle = active ? c.blue : sleep > 0.5 ? c.faint : c.ink;
+      g.lineWidth = c.lw;
+      g.stroke();
+      if (sleep > 0) {
+        // a little z drifting up off the sleeping tab
+        const zz = h * 0.07, zx = x + tw * 0.4, zy = Y - h * 0.06 - ((idle * 0.4) % 1) * h * 0.12;
+        g.globalAlpha = sleep * (1 - ((idle * 0.4) % 1));
+        g.strokeStyle = c.ink;
+        g.beginPath();
+        g.moveTo(zx, zy);
+        g.lineTo(zx + zz, zy);
+        g.lineTo(zx, zy + zz);
+        g.lineTo(zx + zz, zy + zz);
+        g.stroke();
+        g.globalAlpha = 1;
+      }
     }
   },
 };

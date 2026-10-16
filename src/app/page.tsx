@@ -54,6 +54,18 @@ const groups: { heading: string; things: Thing[] }[] = [
         glyph: "typing",
         href: "/blog/keyboard-layout",
       },
+      {
+        title: "Useful computer things",
+        summary: "Useful things I have on my computer.",
+        glyph: "panes",
+        href: "/blog/useful-computer-things",
+      },
+      {
+        title: "How to explain things",
+        summary: "A guide to transferring information between humans.",
+        glyph: "build",
+        href: "/blog/How_to_explain_things",
+      },
     ],
   },
 ];
