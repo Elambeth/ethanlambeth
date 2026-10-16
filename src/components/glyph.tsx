@@ -93,7 +93,25 @@ const DRAW: Record<GlyphKind, (c: Ctx, t: number, S: State) => void> = {
     shape();
     g.save();
     g.clip();
-    const r = Math.min(W * 0.31, H * 0.9), ix = cx + gaze * W * 0.45;
+    // Keep the iris (ring included) a clear gap inside the open eye's outline:
+    // gap from the iris centre to the lid curve y = H0(1 - (x/W)^2), minus both half strokes.
+    const H0 = h * 0.3, margin = c.lw * 2.3;
+    const room = (ox: number) => {
+      let d = Infinity;
+      for (let i = 0; i <= 64; i++) {
+        const x = -W + (2 * W * i) / 64;
+        d = Math.min(d, Math.hypot(x - ox, H0 * (1 - (x / W) ** 2)));
+      }
+      return d - margin;
+    };
+    const r = Math.min(W * 0.31, room(0));
+    let lo = 0, hi = W;
+    for (let i = 0; i < 16; i++) {
+      const mid = (lo + hi) / 2;
+      if (room(mid) >= r) lo = mid;
+      else hi = mid;
+    }
+    const ix = cx + gaze * Math.min(W * 0.45, lo);
     if (H > 0.5) {
       ring(c, ix, cy, r, c.blue, c.lw * 1.4);
       dot(c, ix, cy, r * 0.55, c.blue);
