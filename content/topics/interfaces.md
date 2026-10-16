@@ -1,6 +1,6 @@
 ---
 title: "Interfaces"
-summary: "Interfaces, broadly."
+summary: "How can the medium reach out to greet you?"
 pages:
   - thinking-assistant
   - induced-fit
