@@ -116,14 +116,6 @@ export default async function Blog({
         {post.metadata.gallery && (
           <ImageCarousel images={post.metadata.gallery} />
         )}
-        <footer className="mt-16 border-t border-border pt-6">
-          <Link
-            href="/blog"
-            className="rounded-sm text-sm font-medium outline-none hover:underline hover:underline-offset-4 focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            More writing
-          </Link>
-        </footer>
       </div>
     </main>
   );

@@ -287,13 +287,9 @@ function Half({
             title={trans ? `transparent (${l.title})` : l.title}
             className={cn(
               "absolute flex flex-col items-center justify-center rounded-[0.9cqw] border leading-none transition-colors duration-150",
-              kind === "alpha" && "border-border bg-background text-foreground shadow-[0_1px_0_hsl(var(--border))]",
-              kind === "action" && "border-border bg-muted/50 text-foreground",
-              kind === "mod" && "border-border bg-muted text-muted-foreground",
-              kind === "layer" &&
-                "cursor-pointer border-foreground/60 bg-foreground text-background hover:bg-foreground/85",
-              kind === "trans" && "border-dashed border-border/80 bg-transparent text-muted-foreground/45",
-              kind === "none" && "border-border/40 bg-transparent"
+              "border-border bg-background text-foreground shadow-[0_1px_0_hsl(var(--border))]",
+              kind === "layer" && "cursor-pointer border-muted-foreground/30 bg-muted hover:bg-muted-foreground/20",
+              kind === "trans" && "border-dashed text-muted-foreground/45 shadow-none"
             )}
             style={{
               left: `${(x / HALF_W) * 100}%`,
@@ -363,10 +359,7 @@ export default function KeyboardLayout() {
         <p className="text-foreground">{layer.blurb}</p>
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block size-3 rounded-sm bg-foreground" /> layer key (click it)
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block size-3 rounded-sm border bg-muted" /> modifier
+            <span className="inline-block size-3 rounded-sm border border-muted-foreground/30 bg-muted" /> layer key (click it)
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="inline-block size-3 rounded-sm border border-dashed" /> falls through
