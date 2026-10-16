@@ -1,7 +1,6 @@
 ---
 title: "Interfaces"
 summary: "Interfaces, broadly."
-glyph: dock
 pages:
   - thinking-assistant
   - induced-fit
@@ -25,8 +24,7 @@ pages:
   - will-we-gesture
   - input-devices
   - the-hand
+glyph: dock
 ---
-
-I guess the thing about interfaces is that they are mostly text, the code stuff, and images. That is ALL we have.
 
 How can the medium reach out to greet you?
