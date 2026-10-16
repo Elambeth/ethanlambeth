@@ -1,8 +1,7 @@
 ---
-title: "Thinking"
-summary: ""
-pages:
-  - how-i-like-to-think
+title: "Agent Swarms"
+summary: "What does conflict look like between intelligent systems?"
+pages: []
 ---
 
 
