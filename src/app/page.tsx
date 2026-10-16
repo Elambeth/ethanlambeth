@@ -6,40 +6,59 @@ const beliefs = [
   "AI safety an extremely important problem",
 ];
 
-const things: { title: string; summary: string; glyph: GlyphKind; href?: string }[] = [
+type Thing = {
+  title: string;
+  summary: string;
+  glyph: GlyphKind;
+  href?: string;
+};
+
+const groups: { heading: string; things: Thing[] }[] = [
   {
-    title: "Panacea Index",
-    summary: "Fact checking health influencers.",
-    glyph: "eye",
-    href: "/topics/panacea-index",
+    heading: "Topics",
+    things: [
+      {
+        title: "Agent swarms",
+        summary:
+          "What conflict between large swarms of agents could look like.",
+        glyph: "takeover",
+        href: "/topics/thinking",
+      },
+      {
+        title: "Interfaces",
+        summary: "Interfaces, broadly.",
+        glyph: "dock",
+        href: "/topics/interfaces",
+      },
+      {
+        title: "Augmented reality",
+        summary:
+          "What an AR world would look like, and the social norms that form.",
+        glyph: "brackets",
+        href: "/topics/ar",
+      },
+    ],
   },
   {
-    title: "Keyboard layout",
-    summary: "The layers of my split keyboard.",
-    glyph: "typing",
-    href: "/blog/keyboard-layout",
-  },
-  {
-    title: "Interfaces",
-    summary: "Interfaces, broadly.",
-    glyph: "dock",
-    href: "/topics/interfaces",
-  },
-  {
-    title: "Augmented reality",
-    summary: "What an AR world would look like, and the social norms that form.",
-    glyph: "brackets",
-    href: "/topics/ar",
-  },
-  {
-    title: "Agent swarms",
-    summary: "What conflict between large swarms of agents could look like.",
-    glyph: "takeover",
-    href: "/topics/thinking",
+    heading: "Misc",
+    things: [
+      {
+        title: "Panacea Index",
+        summary: "Fact checking health influencers.",
+        glyph: "eye",
+        href: "/topics/panacea-index",
+      },
+      {
+        title: "Keyboard layout",
+        summary: "The layers of my split keyboard.",
+        glyph: "typing",
+        href: "/blog/keyboard-layout",
+      },
+    ],
   },
 ];
 
-function ThingRow({ thing }: { thing: (typeof things)[number] }) {
+function ThingRow({ thing }: { thing: Thing }) {
   const body = (
     <>
       <Glyph
@@ -73,21 +92,27 @@ export default function Page() {
     <main className="mx-auto max-w-2xl px-6 py-12">
       <h1 className="mb-8 text-3xl font-bold">Ethan Lambeth</h1>
 
-      <section aria-labelledby="things-heading">
-        <h2
-          id="things-heading"
-          className="border-b border-border pb-3 text-base font-semibold"
+      {groups.map((group, i) => (
+        <section
+          key={group.heading}
+          className={i > 0 ? "mt-12" : undefined}
+          aria-labelledby={`${group.heading}-heading`}
         >
-          Things I am working on:
-        </h2>
-        <ul className="mt-2 divide-y divide-border">
-          {things.map((thing) => (
-            <li key={thing.title}>
-              <ThingRow thing={thing} />
-            </li>
-          ))}
-        </ul>
-      </section>
+          <h2
+            id={`${group.heading}-heading`}
+            className="border-b border-border pb-3 text-base font-semibold"
+          >
+            {group.heading}
+          </h2>
+          <ul className="mt-2 divide-y divide-border">
+            {group.things.map((thing) => (
+              <li key={thing.title}>
+                <ThingRow thing={thing} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
 
       <section className="mt-16" aria-labelledby="beliefs-heading">
         <h2
