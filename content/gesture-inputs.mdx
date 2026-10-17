@@ -3,40 +3,32 @@ title: "Gesture Inputs"
 publishedAt: "2026-10-08"
 summary: "What is the perfect input device for the human hand?"
 topics: [interfaces]
+glyph: wheel
 ---
 
-I have been thinking a lot about what gestures are most natural for the human hand. 
+I have been thinking a lot about what gestures are most natural for the human hand. And what devices get close to capturing those. 
 
-This is because I am spending a lot of time thinking about what wonders augmented reality glasses will provide us. 
+For example, the Ipod and its wheel gives you one thumbs worth of input
 
-I recently got claude to revive my dad's old Ipod, and looking at the design of the large wheel, I realized that it is the perfect design for input from just one thumb.
+![|113](/blog/gesture-inputs/img-muz9uxjr.png)
 
-____
+While smartphone is great to use with 2 thumbs, but the rest of your fingers are wasted. 
 
-Then I started thinking about other devices and how well suited they fit your hands:
+![|155](/blog/gesture-inputs/img-muz9dzlc.png)
 
-- the Ipod gives you one thumbs worth of input
+The game controller is great for 2 thumbs and 2 index fingers. (see my messing around with a playstation controller here)
 
-![](/blog/gesture-inputs/img-muz9uxjr.png)
-
-The smartphone is great to use with 2 thumbs, but the rest of your fingers are wasted. 
-
-![](/blog/gesture-inputs/img-muz9dzlc.png)
+![|137](/blog/gesture-inputs/img-muz9tv32.png)
 
 
-- The game controller is great for 2 thumbs and 2 index fingers, so a little bit better.(see my messing around with a playstation controller here)
+- the standard keyboard is great for 9 fingers, as most people only use one thumb for space bar.[^1]
 
-![](/blog/gesture-inputs/img-muz9tv32.png)
-
-
-- the standard keyboard is great for 9 fingers, as most people only use one thumb for space bar. The other hovers like a (my split lets me use all 10 :D)
-
-![](/blog/gesture-inputs/img-muz9uezh.png)
+![|164](/blog/gesture-inputs/img-muz9uezh.png)
 
 
-But all of these have one big issue, you have to hold a physical object! And I think in the beautiful future we ought to build we should be free of such a silly constraint. I should not have to rush home from my walk to my laptop because I got an idea and I need high output bits per second. 
+But all of these have one big issue, you have to hold a physical object! In an ideal world, we should be free of such a silly constraint. I should not have to rush back from my walk to my laptop because I got an idea that I need to record quickly. 
 
-I want to imagine what the virtual hyperobject most optimally suited for gesture input. I thought I would start by tryinig to calculate what are the most "natural" gestures for the human hand. Natural meaning it takes minimal effort, moving a minimal amount in a natural direction. You can find the interactive demo for that here: https://ethanlambeth.com/natural-hand/
+I want to imagine what a virtual object most optimally suited for gesture input. I thought I would start by trying to calculate what are the most "natural" gestures for the human hand. Natural meaning it takes minimal effort, moving a minimal amount in a natural direction. You can find the interactive demo for that here: https://ethanlambeth.com/natural-hand/
 
 
 However I wasn't really happy with these results as optimizing for "naturalness" isnt really the goal, because I suddenly had this huge list of gestures ranked that all felt kind of obvious and a little useless. I needed to filter them again in some way. Because a lot of the most natural gestures are very similar. 
@@ -74,3 +66,5 @@ with most useful results being:
 Now that I have scratched this itch about what gestures I should be trying to capture in the first place, I will next focus on how to record them. (I actually started this whole endeavor by listing out the different gestures that current devices recognize and trying to see what I could salvage from that. But I realized that is just an arbitrary constraint of current technology and it is a lot more fun to go top down. 
 
 In my early post where I looked at EMG wristbands I imagined the technology getting good enough where it is a thin sticker that is overlayed onto the muscle of your hand. I thought of some kind of Ta Moko design of the hand and arm. As I write this now it's not a current technology so I will have to make do with a camera and Mediapipe or some other hacky solution...
+
+[^1]: my [[keyboard-layout|split keyboard]] lets me use all 10 :D
