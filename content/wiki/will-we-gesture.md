@@ -2,6 +2,7 @@
 title: "Will we gesture at all?"
 summary: "All this work on gestures, and yet I don't think we will be gesturing that much"
 topics: [ar, interfaces]
+draft: true
 ---
 
 All this work on gestures, and yet I don't think we will be gesturing that much. Will the model just do it all for us?
