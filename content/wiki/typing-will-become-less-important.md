@@ -1,6 +1,7 @@
 ---
 title: "Typing will become less important"
 summary: ""
+topics: [interfaces]
 ---
 
 It really does seem silly that we input words into a computer letter by letter. 
