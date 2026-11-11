@@ -9,3 +9,6 @@
   X-Robots-Tag: noindex, nofollow
 /sea-runway/*
   X-Robots-Tag: noindex, nofollow
+/sea-runway/content.bin
+  Cache-Control: no-cache
+  X-Robots-Tag: noindex, nofollow
