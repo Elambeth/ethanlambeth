@@ -2,6 +2,7 @@
 title: "Ordinary days"
 summary: "The future will have abundant 3b1b animations."
 topics: [ar]
+draft: true
 ---
 
 What would be different about the experiences of:

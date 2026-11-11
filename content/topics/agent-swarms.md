@@ -4,6 +4,7 @@ summary: "What does conflict look like between intelligent systems?"
 pages:
   - hierachies
   - agents-copying-nature
+  - agent-housing-crisis
 glyph: takeover
 ---
 

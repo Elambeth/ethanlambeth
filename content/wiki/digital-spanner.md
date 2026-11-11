@@ -2,6 +2,7 @@
 title: "The digital spanner"
 summary: "There is such a thing as a spanner, what is the digital spanner?"
 topics: [ar, interfaces]
+draft: true
 ---
 
 It is unlikely that AR is a catalyst for huge new interface paradigms (or maybe I need to be more creative...) but my argument here is that we have so much progress to make with how we can manipulate pixels in a rectangle first.

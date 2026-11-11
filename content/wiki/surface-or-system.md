@@ -2,6 +2,7 @@
 title: "The surface or the system?"
 summary: "Is an MCQ really that useful of an interface?"
 topics: [interfaces]
+draft: true
 ---
 
 Is an MCQ really that useful of an interface? The heavy lifting is the computation done around it.

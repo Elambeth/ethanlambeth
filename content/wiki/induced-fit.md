@@ -2,6 +2,7 @@
 title: "Induced fit"
 summary: "Typing is really quite a drag. People like to click choose!"
 topics: [interfaces]
+draft: true
 ---
 
 I am simultaneously bullish Apple while being bearish iMessage as an interface.

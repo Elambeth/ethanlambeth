@@ -2,6 +2,7 @@
 title: "A thinking assistant"
 summary: "There are AI assistants to help you write code, but none to help you think."
 topics: [interfaces]
+draft: true
 ---
 
 > Lord Henry played with the idea and grew wilful; tossed it into the air and transformed it; let it escape and recaptured it; made it iridescent with fancy, and winged it with paradox. The praise of folly, as he went on, soared into a philosophy, and philosophy herself became young.

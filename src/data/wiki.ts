@@ -28,10 +28,11 @@ export type WikiPage = {
   summary: string;
   topics: string[];
   links: string[]; // outgoing [[links]]
+  glyph?: GlyphKind; // listed first, with its animation, on topic pages
   html: string;
 };
 
-export type TopicPost = { slug: string; title: string; summary: string };
+export type TopicPost = { slug: string; title: string; summary: string; glyph?: GlyphKind };
 
 function readDir(dir: string, ext: string) {
   if (!fs.existsSync(dir)) return [];
@@ -60,6 +61,7 @@ export async function getWikiPages(): Promise<WikiPage[]> {
       title: String(p.data.title ?? p.slug),
       summary: String(p.data.summary ?? ""),
       topics: (p.data.topics as string[] | undefined) ?? [],
+      glyph: p.data.glyph as GlyphKind | undefined,
       links: Array.from(p.content.matchAll(WIKILINK), (m) => resolveTarget(m[1], notes))
         .filter((n) => n?.kind === "wiki")
         .map((n) => n!.slug),
@@ -100,5 +102,6 @@ export function getTopicPosts(topic: string): TopicPost[] {
       slug: p.slug,
       title: String(p.data.title),
       summary: String(p.data.summary ?? ""),
+      glyph: p.data.glyph as GlyphKind | undefined,
     }));
 }

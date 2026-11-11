@@ -2,6 +2,7 @@
 title: "How I like to think"
 summary: ""
 topics: [Thinking]
+draft: true
 ---
 
 I think it's good to have structure or models in the way you think through problems. Here are some I like:

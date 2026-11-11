@@ -7,7 +7,7 @@ export const metadata = {
 
 // Candidate home-page glyphs, side by side (the first of each pair is the one in use)
 const sets: { essay: string; kinds: GlyphKind[] }[] = [
-  { essay: "Gesture inputs", kinds: ["wheel", "pinch"] },
+  { essay: "Gesture inputs", kinds: ["fingers", "phalanx", "landmarks", "wheel", "pinch"] },
   { essay: "A live ad-blocker", kinds: ["lens", "sweep"] },
   { essay: "How to explain things", kinds: ["build", "stack"] },
   { essay: "Useful computer things", kinds: ["panes", "tabs"] },

@@ -2,21 +2,22 @@
 title: "A homescreen of actions"
 summary: "Why does the homescreen list apps? Why not list actions? Workflows!"
 topics: [interfaces]
+draft: true
 ---
 
 Why do we want to interact with apps, they are a means to an end.
 
-Now really is the perfect time for us to rethink the surface in which we interact with these intelligences.
+Now really is the perfect time for us to rethink the surface in which we interact with intelligence.
 
-The concept of an app or browser tabs are too rigid.
+The concept of an app or tabs in the browser are too rigid.
 
-You will have a surface of interaction, the mediator will be a model.
+You will have a surface of interaction, and the mediator will be a model.
 
 The model will ask you what it needs to know and you will answer guiding / steering questions.
 
-The model will function mostly autonomously, either on the same machine you are interacting with it, a separate VM you will rent, or your own hardware/computer.
+The model will function mostly autonomously, either on the same machine you are interacting with it, a separate VM you will rent, or your own hardware.
 
-There are questions around whether they will operate in parallel to you, or exclusively.
+There are questions around whether they will operate in parallel to you, or exclusively. (Will you see a cursor moving on your screen, I think no.)
 
 You will want to have tasks running in the background while you go off and do other things.
 

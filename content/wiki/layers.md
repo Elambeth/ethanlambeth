@@ -2,6 +2,7 @@
 title: "Layers"
 summary: "There will be a digital world, and there will be ads in it."
 topics: [ar]
+draft: true
 ---
 
 ## You will pay for less

@@ -26,7 +26,7 @@ const groups: { heading: string; things: Thing[] }[] = [
       },
       {
         title: "Interfaces",
-        summary: "Interfaces, broadly.",
+        summary: "How we interact with computers.",
         glyph: "dock",
         href: "/topics/interfaces",
       },

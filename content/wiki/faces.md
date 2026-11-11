@@ -2,6 +2,7 @@
 title: "Faces"
 summary: "Privacy is fully gone in public."
 topics: [ar]
+draft: true
 ---
 
 I guess [[what-is-this|these are all object related]], what about segment detection/recognition of people and their objects?

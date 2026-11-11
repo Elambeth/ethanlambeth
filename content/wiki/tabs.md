@@ -2,6 +2,7 @@
 title: "Tabs"
 summary: "You have 50 chrome tabs open because you have no better system."
 topics: [interfaces]
+draft: true
 ---
 
 Why are chrome tabs the way in which we interact with these intelligences?

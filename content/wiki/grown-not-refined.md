@@ -2,6 +2,7 @@
 title: "Grown, not refined"
 summary: "I want it to be shorter, faster, grown, not refined."
 topics: [interfaces]
+draft: true
 ---
 
 I want to be able to ask like 3, 4, 5 questions at once with these LLMs and have the response feel more fluid. Because at the moment it feels so high friction, they take too long, bumble around, I am impatient. And they respond with too much text. I don't want to read all that, I want it to be shorter, faster, grown, not refined. I don't want to dig, sift, sort. I want to ask and build up my understanding from ground truths, not filter out the slop to find the useful info.

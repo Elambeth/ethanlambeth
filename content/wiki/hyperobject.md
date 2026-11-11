@@ -2,6 +2,7 @@
 title: "The hyperobject"
 summary: "The best object is no object."
 topics: [ar, interfaces]
+draft: true
 ---
 
 Digital industrial design: physical objects that can be manipulated by the human body. However the objects themselves do not have to be physical, the only thing that does is the human body. So the objects can be free, everchanging. Polymorphic.

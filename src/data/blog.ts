@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { footnoteOptions } from "@/lib/footnotes.mjs";
 import { linkNotes, noteIndex, rehypeImageSize } from "@/lib/notes.mjs";
 
 type Metadata = {
@@ -30,7 +31,7 @@ export async function markdownToHTML(markdown: string) {
   const p = await unified()
     .use(remarkParse)
     .use(remarkGfm)
-    .use(remarkRehype)
+    .use(remarkRehype, footnoteOptions) // [^1] footnotes → "Notes" list (src/lib/footnotes.mjs)
     .use(rehypeImageSize) // ![alt|400](src)
     .use(rehypePrettyCode, {
       // https://rehype-pretty.pages.dev/#usage

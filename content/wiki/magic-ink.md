@@ -2,6 +2,7 @@
 title: "Learning, creating, communicating"
 summary: "Mechanical metaphors are extra noise."
 topics: [interfaces]
+draft: true
 ---
 
 From [Magic Ink](https://worrydream.com/MagicInk/) (Bret Victor):

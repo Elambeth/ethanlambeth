@@ -2,6 +2,7 @@
 title: "What is this?"
 summary: "A \"what is this\" for any object you see."
 topics: [ar]
+draft: true
 ---
 
 I think the easiest win of all is having an ultrafast segment highlighting model running constantly in AR. You should be able to select an object, and it show progressive detail on it, and allow you to run commands upon it. A "what is this" for any object you see.

@@ -2,6 +2,7 @@
 title: "Voice is not the ideal interface"
 summary: "It is completely linear, a single stream."
 topics: [interfaces, ar]
+draft: true
 ---
 
 Voice is not the ideal interface:

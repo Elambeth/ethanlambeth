@@ -2,6 +2,7 @@
 title: "Maybe it's just HTML"
 summary: "Render everything as HTML, fast TPS presets for similar patterns."
 topics: [interfaces]
+draft: true
 ---
 
 Maybe it's just HTML.

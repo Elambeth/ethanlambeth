@@ -1,4 +1,5 @@
 import EntryList from "@/components/entry-list";
+import Link from "next/link";
 import Glyph from "@/components/glyph";
 import { getTopic, getTopicPosts, getTopics, getWikiPages } from "@/data/wiki";
 import type { Metadata } from "next";
@@ -36,6 +37,7 @@ export default async function TopicPage({
       href: `/wiki/${p.slug}`,
       title: p.title,
       summary: p.summary,
+      glyph: p.glyph,
     }));
   const posts = getTopicPosts(slug).map((p) => ({
     ...p,
@@ -48,6 +50,9 @@ export default async function TopicPage({
   const entries = [...wiki, ...posts].sort(
     (a, b) => rank(a.slug) - rank(b.slug),
   );
+  // Anything with a glyph goes on top, drawn like the home page rows
+  const glyphed = entries.filter((e) => e.glyph);
+  const rest = entries.filter((e) => !e.glyph);
 
   return (
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-12 sm:px-6 sm:pt-16">
@@ -78,8 +83,35 @@ export default async function TopicPage({
             >
               Notes
             </h2>
+            {glyphed.length > 0 && (
+              <ul className="divide-y divide-border border-b border-border">
+                {glyphed.map((e) => (
+                  <li key={e.href}>
+                    <Link
+                      href={e.href}
+                      className="group flex items-center gap-4 py-3 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                    >
+                      <Glyph
+                        kind={e.glyph!}
+                        className="h-10 w-16 flex-none rounded-[3px] border border-border bg-background"
+                      />
+                      <span className="min-w-0">
+                        <span className="block font-medium tracking-tight underline-offset-4 group-hover:underline">
+                          {e.title}
+                        </span>
+                        {e.summary && (
+                          <span className="block truncate text-sm text-muted-foreground">
+                            {e.summary}
+                          </span>
+                        )}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
             <EntryList
-              entries={entries.map(({ href, title, summary }) => ({
+              entries={rest.map(({ href, title, summary }) => ({
                 href,
                 title,
                 summary,

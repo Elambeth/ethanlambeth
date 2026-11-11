@@ -169,6 +169,85 @@
     max-height: 16rem;
   }
 
+  /* footnotes: [^1] marks + the "Notes" list remark-gfm appends (src/lib/footnotes.mjs) */
+  .prose sup:has(> a[data-footnote-ref]) {
+    @apply font-mono text-[0.68em] leading-none;
+    vertical-align: super;
+    padding-left: 0.1em;
+  }
+
+  .prose a[data-footnote-ref] {
+    @apply text-muted-foreground no-underline hover:text-foreground;
+    padding: 0 0.15em;
+  }
+
+  .prose a[data-footnote-ref][aria-expanded="true"] {
+    @apply text-foreground;
+  }
+
+  .prose section[data-footnotes] {
+    @apply mt-16 border-t border-border pt-6 text-[0.9em] text-muted-foreground;
+  }
+
+  .prose section[data-footnotes] .footnotes-label {
+    @apply mb-4 mt-0 text-sm font-medium uppercase tracking-[0.08em] text-muted-foreground;
+  }
+
+  .prose section[data-footnotes] li::marker {
+    @apply font-mono text-[0.85em];
+  }
+
+  .prose section[data-footnotes] li:target {
+    @apply text-foreground;
+  }
+
+  .prose a[data-footnote-backref] {
+    @apply no-underline;
+  }
+
+  .prose [id^="user-content-fn"] {
+    scroll-margin-top: 6rem;
+  }
+
+  .fn-pop {
+    @apply fixed z-50 overflow-y-auto rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground shadow-lg;
+    width: min(26rem, calc(100vw - 24px));
+    max-height: min(22rem, 55vh);
+    line-height: 1.65;
+  }
+
+  .fn-pop-n {
+    @apply float-left mr-2 font-mono text-xs text-muted-foreground;
+    line-height: 1.65rem;
+  }
+
+  .fn-pop p {
+    margin: 0;
+  }
+
+  .fn-pop p + p,
+  .fn-pop ul,
+  .fn-pop ol,
+  .fn-pop blockquote,
+  .fn-pop pre {
+    margin-top: 0.6rem;
+  }
+
+  .fn-pop ul { @apply list-disc pl-5; }
+  .fn-pop ol { @apply list-decimal pl-5; }
+
+  .fn-pop a {
+    @apply underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground;
+  }
+
+  .fn-pop code {
+    @apply font-mono text-[0.9em];
+  }
+
+  .fn-pop img {
+    @apply mt-2 max-h-48 rounded;
+  }
+
   .note-prose p {
     margin: 0;
   }

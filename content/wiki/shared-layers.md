@@ -2,6 +2,7 @@
 title: "Shared layers"
 summary: "AR glasses would mean you just render the image in shared space together."
 topics: [ar]
+draft: true
 ---
 
 There will be a point where we build systems so good at computer use that they become better and faster than you at everyday tasks.

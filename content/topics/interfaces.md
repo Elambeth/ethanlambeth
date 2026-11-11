@@ -24,6 +24,7 @@ pages:
   - will-we-gesture
   - input-devices
   - the-hand
+  - typing-will-become-less-important
 glyph: dock
 ---
 

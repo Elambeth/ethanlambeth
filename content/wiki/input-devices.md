@@ -2,6 +2,7 @@
 title: "Input devices"
 summary: "There is either input or output."
 topics: [ar, interfaces]
+draft: true
 ---
 
 There is either input or output. The output being VR would be nice but is hard. The input we can focus on.

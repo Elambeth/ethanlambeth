@@ -2,6 +2,7 @@
 title: "The body as input"
 summary: "Hands, everyone has them. Can be very intuitive and natural."
 topics: [ar, interfaces]
+draft: true
 ---
 
 Hands, everyone has them. Can be very intuitive and natural. I should think about what makes some hand gestures natural for different inputs.

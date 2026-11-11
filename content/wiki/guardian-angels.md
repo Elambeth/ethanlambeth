@@ -2,6 +2,7 @@
 title: "Guardian angels"
 summary: "Crons that run regularly, surfacing to me with a list of options."
 topics: [interfaces]
+draft: true
 ---
 
 Is there a way I can try out induced fit on my machine, can I make decisions easier for myself. Crons that run regularly, taking in immense data, churning and thinking with a bunch of tokens, and then surfacing to me with a list of options.

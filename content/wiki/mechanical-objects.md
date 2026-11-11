@@ -2,6 +2,7 @@
 title: "Mechanical objects"
 summary: "They are the mechanical objects and are not the goal."
 topics: [interfaces]
+draft: true
 ---
 
 I am seeing all of these cool interfaces and diagrams on are.na but I should be very careful not to fall into the trap of optimizing for them alone. They are the mechanical objects and are not the goal. The goal is completing a task.

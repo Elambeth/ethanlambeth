@@ -11,6 +11,9 @@ export type GlyphKind =
   | "takeover"
   | "wheel"
   | "pinch"
+  | "fingers"
+  | "phalanx"
+  | "landmarks"
   | "lens"
   | "sweep"
   | "build"
@@ -329,6 +332,119 @@ const DRAW: Record<GlyphKind, (c: Ctx, t: number, S: State) => void> = {
       const k = (t - 1) / 0.8;
       g.globalAlpha = 1 - k;
       ring(c, tx, cy, h * (0.06 + k * 0.2), c.blue);
+      g.globalAlpha = 1;
+    }
+  },
+
+  // Gesture inputs: two hands from above; fingers light up as devices put more of them to work
+  // (iPod: one thumb, phone: two thumbs, controller: + index fingers, keyboard: all ten)
+  fingers(c, T) {
+    const { w, h } = c, g = c.ctx, t = T % 5.6, sp = h * 0.105;
+    const stage = t < 1.1 ? 0 : t < 2.2 ? 1 : t < 3.3 ? 2 : t < 5 ? 3 : -1, since = t - [0, 1.1, 2.2, 3.3][stage];
+    const litAt = (st: number, hand: number, f: number) =>
+      st >= 0 && (st === 3 || (f === 4 && (hand === 1 || st > 0)) || (f === 3 && st === 2));
+    const lit = (hand: number, f: number) => litAt(stage, hand, f);
+    const fresh = (hand: number, f: number) => lit(hand, f) && (stage === 0 || !litAt(stage - 1, hand, f));
+    for (const hand of [0, 1]) {
+      const hx = w / 2 - 3.7 * sp;
+      const X = (x: number) => (hand === 0 ? x : w - x);
+      // pinky, ring, middle, index, then the thumb angled in toward the other hand
+      const F = [0, 1, 2, 3].map((i) => {
+        const bx = hx + (i - 1.5) * sp, by = h * 0.66, len = h * [0.2, 0.27, 0.31, 0.27][i];
+        return [bx, by, bx, by - len];
+      });
+      F.push([hx + 2.1 * sp, h * 0.76, hx + 2.8 * sp, h * 0.58]);
+      F.forEach(([x1, y1, x2, y2], f) => {
+        const on = lit(hand, f);
+        line(c, X(x1), y1, X(x2), y2, on ? c.blue : c.ink, c.lw * (on ? 1.5 : 1.1));
+        dot(c, X(x2), y2, h * 0.04, on ? c.blue : c.ink);
+        if (on && fresh(hand, f) && since < 0.7) {
+          g.globalAlpha = 1 - since / 0.7;
+          ring(c, X(x2), y2, h * (0.05 + (since / 0.7) * 0.07), c.blue);
+          g.globalAlpha = 1;
+        }
+      });
+    }
+  },
+
+  // Gesture inputs: side view of an index finger; the thumb taps its middle segment,
+  // then strokes out and back along the tip (the microgestures in the post's table)
+  phalanx(c, T) {
+    const { w, h } = c, g = c.ctx, t = T % 4.6;
+    const x0 = w * 0.08, x1 = w * 0.9, fh = h * 0.26, cy = h * 0.4, bot = cy + fh / 2;
+    const j1 = lerp(x0, x1, 0.46), j2 = lerp(x0, x1, 0.74);
+    const seg = t < 1.2 ? [j1, j2] : t < 4 ? [j2, x1] : null;
+    if (seg && t > 0.35) {
+      g.save();
+      rrect(c, x0, cy - fh / 2, x1 - x0, fh, fh / 2);
+      g.clip();
+      g.globalAlpha = 0.14;
+      g.fillStyle = c.blue;
+      g.fillRect(seg[0], cy - fh, seg[1] - seg[0], fh * 2);
+      g.restore();
+    }
+    rrect(c, x0, cy - fh / 2, x1 - x0, fh, fh / 2);
+    g.strokeStyle = c.ink;
+    g.lineWidth = c.lw * 1.2;
+    g.stroke();
+    for (const jx of [j1, j2]) line(c, jx, cy - fh * 0.3, jx, cy + fh * 0.3, c.faint);
+    // thumb tip: rises to tap, slides out to the fingertip, slides back, drops away
+    const near = lerp(j2, x1, 0.12), far = lerp(j2, x1, 0.82), rest = bot + h * 0.3;
+    let x: number, y: number;
+    if (t < 1.2) { x = (j1 + j2) / 2; y = lerp(rest, bot, ease(t / 0.35) * (1 - ease((t - 0.7) / 0.3))); }
+    else if (t < 1.6) { x = lerp((j1 + j2) / 2, near, ease((t - 1.2) / 0.4)); y = lerp(rest, bot, ease((t - 1.2) / 0.4)); }
+    else if (t < 2.6) { x = lerp(near, far, ease((t - 1.7) / 0.8)); y = bot; }
+    else if (t < 3.6) { x = lerp(far, near, ease((t - 2.7) / 0.8)); y = bot; }
+    else { x = near; y = lerp(bot, rest, ease((t - 3.7) / 0.5)); }
+    const touching = Math.abs(y - bot) < h * 0.02;
+    if (t > 1.7 && t < 3.6) {
+      const a = t < 2.6 ? near : far;
+      line(c, a, bot, x, bot, c.blue, c.lw * 1.8);
+    }
+    if (t > 0.35 && t < 1.1) {
+      const k = (t - 0.35) / 0.75;
+      g.globalAlpha = 1 - k;
+      ring(c, (j1 + j2) / 2, bot, h * (0.05 + k * 0.16), c.blue);
+      g.globalAlpha = 1;
+    }
+    dot(c, x, y + h * 0.045, h * 0.055, touching ? c.blue : c.ink);
+  },
+
+  // Gesture inputs: a MediaPipe-style 21-point hand skeleton, tracked as it pinches
+  landmarks(c, T) {
+    const { w, h } = c, g = c.ctx, t = T % 3.2;
+    const p = t < 0.9 ? ease((t - 0.2) / 0.7) : t < 1.8 ? 1 : 1 - ease((t - 1.8) / 0.8);
+    // [open, pinched] poses in units of h; 0 wrist, then thumb, index, middle, ring, pinky (4 each)
+    const open = [
+      [0, 0.42], [-0.12, 0.34], [-0.22, 0.24], [-0.29, 0.14], [-0.35, 0.06],
+      [-0.09, 0.08], [-0.11, -0.08], [-0.12, -0.19], [-0.13, -0.28],
+      [0, 0.06], [0, -0.12], [0, -0.24], [0, -0.34],
+      [0.09, 0.08], [0.1, -0.07], [0.11, -0.18], [0.12, -0.26],
+      [0.17, 0.13], [0.2, 0.02], [0.22, -0.06], [0.24, -0.13],
+    ];
+    const shut: Record<number, number[]> = {
+      2: [-0.2, 0.25], 3: [-0.23, 0.13], 4: [-0.21, 0.02],
+      6: [-0.14, -0.07], 7: [-0.21, -0.09], 8: [-0.21, 0.0],
+      11: [0.01, -0.22], 12: [0.02, -0.31], 15: [0.12, -0.16], 16: [0.13, -0.23],
+    };
+    const s = h * 1.08, ox = w / 2 + 0.055 * s, oy = h / 2 - 0.04 * s;
+    const P = open.map(([x, y], i) => {
+      const [sx, sy] = shut[i] ?? [x, y];
+      const jit = h * 0.004;
+      return [ox + lerp(x, sx, p) * s + Math.sin(T * 9 + i * 1.7) * jit, oy + lerp(y, sy, p) * s + Math.cos(T * 8 + i * 2.3) * jit];
+    });
+    const bones = [[0, 1], [0, 5], [5, 9], [9, 13], [13, 17], [0, 17]];
+    for (let f = 0; f < 5; f++) for (let k = 1; k < 4; k++) bones.push([1 + f * 4 + k - 1, 1 + f * 4 + k]);
+    for (const [a, b] of bones) line(c, P[a][0], P[a][1], P[b][0], P[b][1], c.ink, c.lw * 0.9);
+    const pinched = p > 0.97;
+    P.forEach(([x, y], i) => {
+      const tip = i === 4 || i === 8;
+      dot(c, x, y, h * (tip ? 0.032 : 0.02), tip && p > 0.5 ? c.blue : c.ink);
+    });
+    if (t > 0.9 && t < 1.7) {
+      const k = (t - 0.9) / 0.8, mx = (P[4][0] + P[8][0]) / 2, my = (P[4][1] + P[8][1]) / 2;
+      g.globalAlpha = (1 - k) * (pinched ? 1 : 0.6);
+      ring(c, mx, my, h * (0.05 + k * 0.14), c.blue);
       g.globalAlpha = 1;
     }
   },

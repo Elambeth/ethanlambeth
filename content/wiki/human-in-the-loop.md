@@ -2,6 +2,7 @@
 title: "Human in the loop"
 summary: "Why do we even need to show the user anything in the first place?"
 topics: [interfaces]
+draft: true
 ---
 
 I have been thinking a bunch about interfaces, how to most optimally communicate information to a user. These new AI tools make this so much easier, but I should question why we even need to show the user anything in the first place? If the models make better + faster decisions than any person could, does showing a person anything make sense at all?

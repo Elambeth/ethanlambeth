@@ -2,6 +2,7 @@
 title: "Adding or removing"
 summary: "I guess everything is either adding or removing information/noise."
 topics: [ar, interfaces]
+draft: true
 ---
 
 What are the overall things that we can do?
